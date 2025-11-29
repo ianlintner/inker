@@ -1,6 +1,6 @@
 """Configuration settings for the AI Blogger."""
 
-from typing import List
+from typing import Dict, List
 
 # Topics to search for
 TOPICS: List[str] = [
@@ -28,12 +28,21 @@ SCORING_WEIGHTS = {
 YOUTUBE_MAX_AGE_DAYS: int = 7
 
 # Default number of results per source
-DEFAULT_HN_RESULTS: int = 10
-DEFAULT_WEB_RESULTS: int = 5
-DEFAULT_YOUTUBE_RESULTS: int = 5
+DEFAULT_MAX_RESULTS: int = 5
+
+# Source-specific default result counts
+SOURCE_DEFAULTS: Dict[str, int] = {
+    "hacker_news": 10,
+    "web": 5,
+    "youtube": 5,
+}
 
 # Number of candidate posts to generate
 DEFAULT_NUM_CANDIDATES: int = 3
 
 # Output directory for blog posts
 DEFAULT_OUTPUT_DIR: str = "./posts"
+
+# Available sources (enabled by default)
+AVAILABLE_SOURCES: List[str] = ["hacker_news", "web", "youtube"]
+

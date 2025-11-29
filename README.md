@@ -6,10 +6,12 @@ Designed for **simple CLI execution** and **cron automation**.
 
 ## Features
 
+- **Modular, extensible architecture** for easy addition of new sources
 - **Multi-source news fetching**:
   - Hacker News articles
   - Web search results (via Tavily)
   - Trending YouTube videos (via YouTube Data API v3)
+- **Dynamic source selection** via CLI
 - **AI-powered content generation** using LangChain and GPT-4
 - **Automated scoring and selection** of best content
 - **Markdown output** ready for publishing
@@ -20,7 +22,7 @@ Designed for **simple CLI execution** and **cron automation**.
 ai_blogger/
 ├── __main__.py            # CLI entrypoint
 ├── config.py              # Topics, scoring weights, constants
-├── fetchers.py            # Hacker News + web search + YouTube trending
+├── fetchers.py            # Modular fetcher architecture + implementations
 ├── chains.py              # LangChain chains (writer, critic, refiner)
 ├── models.py              # Pydantic models
 ├── utils.py               # slugify, timestamps
@@ -72,6 +74,15 @@ python -m ai_blogger --num-posts 5 --out-dir ./my-posts
 # Search specific topics
 python -m ai_blogger --topics "AI coding" "developer tools"
 
+# Use only specific sources
+python -m ai_blogger --sources hacker_news youtube
+
+# Set custom result counts per source
+python -m ai_blogger --max-results "hacker_news:15,youtube:10"
+
+# List available sources and their status
+python -m ai_blogger --list-sources
+
 # Dry run (see what would be done)
 python -m ai_blogger --dry-run
 
@@ -86,8 +97,37 @@ python -m ai_blogger -v
 | `--num-posts N` | Number of candidate posts to generate | 3 |
 | `--out-dir DIR` | Output directory for blog posts | ./posts |
 | `--topics TOPIC...` | Topics to search for | Config defaults |
+| `--sources SOURCE...` | Sources to fetch from | All available |
+| `--max-results FORMAT` | Max results per source (e.g., "hacker_news:10,youtube:5") | Config defaults |
+| `--list-sources` | List all available sources and exit | - |
 | `--dry-run` | Print what would be done without executing | False |
 | `-v, --verbose` | Enable verbose output | False |
+
+## Adding New Sources
+
+The fetcher architecture is modular and extensible. To add a new source:
+
+```python
+from ai_blogger.fetchers import BaseFetcher, register_fetcher
+from ai_blogger.models import Article
+
+@register_fetcher("my_source")
+class MySourceFetcher(BaseFetcher):
+    name = "my_source"
+    env_key = "MY_SOURCE_API_KEY"  # Optional, set to None if no key needed
+    description = "Fetch articles from My Source"
+
+    def fetch(self, topic: str, max_results: int) -> list[Article]:
+        # Your implementation here
+        articles = []
+        # ... fetch and parse articles ...
+        return articles
+```
+
+Once registered, the new source will automatically:
+- Appear in `--list-sources`
+- Be available via `--sources my_source`
+- Support custom max results via `--max-results "my_source:10"`
 
 ## Cron Automation
 
@@ -116,8 +156,8 @@ The default topics searched are:
 ## Pipeline Overview
 
 ```
-topics → fetch_all_articles()
-        → includes YouTube trending videos
+topics → fetch_all_articles(sources=[...])
+        → includes selected sources
         → generate_candidates()
         → score_candidates()
         → refine_winner()

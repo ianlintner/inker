@@ -7,15 +7,51 @@ import sys
 from pathlib import Path
 
 from .chains import generate_candidates, refine_winner, score_candidates
-from .config import DEFAULT_NUM_CANDIDATES, DEFAULT_OUTPUT_DIR, TOPICS
-from .fetchers import fetch_all_articles
+from .config import AVAILABLE_SOURCES, DEFAULT_NUM_CANDIDATES, DEFAULT_OUTPUT_DIR, SOURCE_DEFAULTS, TOPICS
+from .fetchers import fetch_all_articles, get_available_sources
 from .utils import generate_filename
+
+
+def parse_max_results(value: str) -> dict:
+    """Parse max results argument in format 'source:count,source:count'.
+
+    Args:
+        value: String in format 'hacker_news:10,web:5,youtube:5'
+
+    Returns:
+        Dict mapping source names to max results.
+    """
+    result = SOURCE_DEFAULTS.copy()
+    for item in value.split(","):
+        if ":" in item:
+            source, count = item.split(":", 1)
+            try:
+                result[source.strip()] = int(count.strip())
+            except ValueError:
+                print(f"Warning: Invalid count for {source}, using default")
+    return result
 
 
 def main():
     """Main entry point for the AI Blogger CLI."""
+    available = get_available_sources()
+
     parser = argparse.ArgumentParser(
-        description="AI Blogger - Automated blog post generation"
+        description="AI Blogger - Automated blog post generation",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=f"""
+Available sources: {', '.join(available)}
+
+Examples:
+  # Use only Hacker News and YouTube
+  python -m ai_blogger --sources hacker_news youtube
+
+  # Set custom result counts per source
+  python -m ai_blogger --max-results "hacker_news:15,youtube:10"
+
+  # Combine with custom topics
+  python -m ai_blogger --topics "AI" "machine learning" --sources web youtube
+"""
     )
     parser.add_argument(
         "--num-posts",
@@ -37,6 +73,25 @@ def main():
         help="Topics to search for (default: uses config topics)",
     )
     parser.add_argument(
+        "--sources",
+        type=str,
+        nargs="+",
+        default=None,
+        choices=available,
+        help=f"Sources to fetch from (default: {', '.join(AVAILABLE_SOURCES)})",
+    )
+    parser.add_argument(
+        "--max-results",
+        type=str,
+        default=None,
+        help="Max results per source in format 'source:count,source:count' (e.g., 'hacker_news:10,youtube:5')",
+    )
+    parser.add_argument(
+        "--list-sources",
+        action="store_true",
+        help="List all available sources and exit",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print what would be done without actually generating posts",
@@ -50,6 +105,17 @@ def main():
 
     args = parser.parse_args()
 
+    # Handle list-sources
+    if args.list_sources:
+        print("Available sources:")
+        for name in get_available_sources():
+            from .fetchers import get_fetcher
+            fetcher = get_fetcher(name)
+            if fetcher:
+                status = "✓" if fetcher.is_available() else "✗ (missing API key)"
+                print(f"  {name}: {fetcher.description} [{status}]")
+        return
+
     # Validate environment
     if not os.environ.get("OPENAI_API_KEY"):
         print("Error: OPENAI_API_KEY environment variable is required")
@@ -62,10 +128,14 @@ def main():
         print("Warning: YOUTUBE_API_KEY not set - YouTube trending will be disabled")
 
     topics = args.topics or TOPICS
+    sources = args.sources or AVAILABLE_SOURCES
+    max_results = parse_max_results(args.max_results) if args.max_results else None
 
     if args.dry_run:
         print("Dry run mode - would perform the following:")
         print(f"  - Topics: {topics}")
+        print(f"  - Sources: {sources}")
+        print(f"  - Max results: {max_results or SOURCE_DEFAULTS}")
         print(f"  - Number of candidates: {args.num_posts}")
         print(f"  - Output directory: {args.out_dir}")
         return
@@ -80,7 +150,7 @@ def main():
 
     # Step 1: Fetch articles
     print("\n[1/4] Fetching articles from all sources...")
-    articles = fetch_all_articles(topics=topics)
+    articles = fetch_all_articles(topics=topics, sources=sources, max_results=max_results)
 
     if not articles:
         print("Error: No articles found. Check your API keys and network connection.")
