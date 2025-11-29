@@ -2,14 +2,17 @@
 """AI Blogger - CLI entrypoint for generating AI-powered blog posts."""
 
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
 
 from .chains import generate_candidates, refine_winner, score_candidates
-from .config import AVAILABLE_SOURCES, DEFAULT_NUM_CANDIDATES, DEFAULT_OUTPUT_DIR, SOURCE_DEFAULTS, TOPICS
+from .config import DEFAULT_NUM_CANDIDATES, DEFAULT_OUTPUT_DIR, SOURCE_DEFAULTS, TOPICS
 from .fetchers import fetch_all_articles, get_available_sources
 from .utils import generate_filename
+
+logger = logging.getLogger(__name__)
 
 
 def parse_max_results(value: str) -> dict:
@@ -51,6 +54,8 @@ Examples:
 
   # Combine with custom topics
   python -m ai_blogger --topics "AI" "machine learning" --sources web youtube
+
+Requires Python 3.9 or higher.
 """
     )
     parser.add_argument(
@@ -78,7 +83,7 @@ Examples:
         nargs="+",
         default=None,
         choices=available,
-        help=f"Sources to fetch from (default: {', '.join(AVAILABLE_SOURCES)})",
+        help=f"Sources to fetch from (default: all registered sources)",
     )
     parser.add_argument(
         "--max-results",
@@ -105,6 +110,10 @@ Examples:
 
     args = parser.parse_args()
 
+    # Configure logging based on verbosity
+    log_level = logging.DEBUG if args.verbose else logging.INFO
+    logging.basicConfig(level=log_level, format='%(levelname)s: %(message)s')
+
     # Handle list-sources
     if args.list_sources:
         print("Available sources:")
@@ -128,7 +137,7 @@ Examples:
         print("Warning: YOUTUBE_API_KEY not set - YouTube trending will be disabled")
 
     topics = args.topics or TOPICS
-    sources = args.sources or AVAILABLE_SOURCES
+    sources = args.sources or get_available_sources()
     max_results = parse_max_results(args.max_results) if args.max_results else None
 
     if args.dry_run:
@@ -153,7 +162,12 @@ Examples:
     articles = fetch_all_articles(topics=topics, sources=sources, max_results=max_results)
 
     if not articles:
-        print("Error: No articles found. Check your API keys and network connection.")
+        print("Error: No articles found.")
+        print("  Possible causes:")
+        print("  - Missing API keys (check TAVILY_API_KEY, YOUTUBE_API_KEY)")
+        print("  - Network connectivity issues")
+        print("  - No results for the specified topics")
+        print("  Try running with --list-sources to check source availability.")
         sys.exit(1)
 
     if args.verbose:
@@ -163,10 +177,14 @@ Examples:
 
     # Step 2: Generate candidates
     print(f"\n[2/4] Generating {args.num_posts} candidate blog posts...")
-    candidates = generate_candidates(articles, num_candidates=args.num_posts)
+    try:
+        candidates = generate_candidates(articles, num_candidates=args.num_posts)
+    except ValueError as e:
+        print(f"Error: Failed to generate candidate posts: {e}")
+        sys.exit(1)
 
     if not candidates:
-        print("Error: Failed to generate candidate posts.")
+        print("Error: No candidate posts were generated.")
         sys.exit(1)
 
     if args.verbose:
@@ -177,6 +195,10 @@ Examples:
     # Step 3: Score candidates
     print("\n[3/4] Scoring candidate posts...")
     scored_candidates = score_candidates(candidates)
+
+    if not scored_candidates:
+        print("Error: No candidates were scored successfully.")
+        sys.exit(1)
 
     print("\nScores:")
     for i, scored in enumerate(scored_candidates, 1):
@@ -191,8 +213,12 @@ Examples:
     filename = generate_filename(winner.candidate.title)
     filepath = out_dir / filename
 
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(final_content)
+    try:
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(final_content)
+    except (OSError, IOError, UnicodeEncodeError) as e:
+        print(f"Error: Failed to write blog post to '{filepath}': {e}")
+        sys.exit(1)
 
     print("\n" + "=" * 60)
     print("SUCCESS! Blog post generated.")

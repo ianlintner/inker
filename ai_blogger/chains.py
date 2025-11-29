@@ -1,13 +1,16 @@
 """LangChain chains for generating, scoring, and refining blog posts."""
 
 import json
+import logging
 from typing import List
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from .config import SCORING_WEIGHTS, DEFAULT_NUM_CANDIDATES
+from .config import LLM_MODEL_NAME, SCORING_WEIGHTS, DEFAULT_NUM_CANDIDATES
 from .models import Article, CandidatePost, PostScore, ScoredPost
+
+logger = logging.getLogger(__name__)
 
 
 def get_llm(temperature: float = 0.7) -> ChatOpenAI:
@@ -18,8 +21,13 @@ def get_llm(temperature: float = 0.7) -> ChatOpenAI:
 
     Returns:
         Configured ChatOpenAI instance.
+
+    Note:
+        The model name can be configured via the OPENAI_MODEL environment
+        variable. Defaults to "gpt-4". Supported models include:
+        "gpt-4", "gpt-4-turbo", "gpt-4o", "gpt-3.5-turbo".
     """
-    return ChatOpenAI(model="gpt-4o", temperature=temperature)
+    return ChatOpenAI(model=LLM_MODEL_NAME, temperature=temperature)
 
 
 def generate_candidates(
@@ -70,8 +78,9 @@ Generate {num_candidates} distinct blog post candidates. Return valid JSON only.
     try:
         candidates_data = json.loads(response.content)
         if not isinstance(candidates_data, list):
-            print(f"Error: Expected list of candidates, got {type(candidates_data)}")
-            return []
+            error_msg = f"Expected list of candidates, got {type(candidates_data)}"
+            logger.error(error_msg)
+            raise ValueError(error_msg)
         candidates = []
         for data in candidates_data:
             if not isinstance(data, dict):
@@ -89,9 +98,9 @@ Generate {num_candidates} distinct blog post candidates. Return valid JSON only.
             candidates.append(candidate)
         return candidates
     except json.JSONDecodeError as e:
-        print(f"Error parsing candidate posts: {e}")
-        print(f"Raw response: {response.content[:500]}")
-        return []
+        error_msg = f"Error parsing candidate posts: {e}\nRaw response: {response.content[:500]}"
+        logger.error(error_msg)
+        raise ValueError(error_msg) from e
 
 
 def score_candidate(candidate: CandidatePost) -> ScoredPost:
@@ -135,11 +144,11 @@ Provide your scoring as valid JSON only.""")
     try:
         score_data = json.loads(response.content)
         if not isinstance(score_data, dict):
-            print(f"Error: Expected dict for score, got {type(score_data)}")
-            print(f"Raw response: {response.content[:500]}")
+            logger.error(f"Expected dict for score, got {type(score_data)}")
+            logger.error(f"Raw response: {response.content[:500]}")
             raise ValueError("Invalid score format")
 
-        # Calculate weighted total score
+        # Calculate weighted total score (weights are validated in config.py to sum to 1.0)
         weights = SCORING_WEIGHTS
         total = (
             score_data.get("relevance", 0) * weights["relevance"]
@@ -160,8 +169,8 @@ Provide your scoring as valid JSON only.""")
         )
         return ScoredPost(candidate=candidate, score=score)
     except (json.JSONDecodeError, ValueError) as e:
-        print(f"Error parsing score: {e}")
-        print(f"Raw response: {response.content[:500]}")
+        logger.error(f"Error parsing score: {e}")
+        logger.error(f"Raw response: {response.content[:500]}")
         # Return a default low score on error
         score = PostScore(
             relevance=0,

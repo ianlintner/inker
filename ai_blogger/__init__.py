@@ -1,7 +1,10 @@
-"""AI Blogger package."""
+"""AI Blogger package.
+
+Requires Python 3.9 or higher.
+"""
 
 from .chains import generate_candidates, refine_winner, score_candidates
-from .config import AVAILABLE_SOURCES, SOURCE_DEFAULTS, TOPICS
+from .config import LLM_MODEL_NAME, SOURCE_DEFAULTS, TOPICS
 from .fetchers import (
     BaseFetcher,
     fetch_all_articles,
@@ -21,7 +24,7 @@ __all__ = [
     "refine_winner",
     "score_candidates",
     # Config
-    "AVAILABLE_SOURCES",
+    "LLM_MODEL_NAME",
     "SOURCE_DEFAULTS",
     "TOPICS",
     # Fetchers (modular API)

@@ -1,5 +1,6 @@
 """Configuration settings for the AI Blogger."""
 
+import os
 from typing import Dict, List
 
 # Topics to search for
@@ -15,14 +16,19 @@ TOPICS: List[str] = [
     "cloud infrastructure",
 ]
 
-# Scoring weights for candidate posts
-SCORING_WEIGHTS = {
+# Scoring weights for candidate posts (must sum to 1.0)
+SCORING_WEIGHTS: Dict[str, float] = {
     "relevance": 0.3,
     "originality": 0.25,
     "depth": 0.2,
     "clarity": 0.15,
     "engagement": 0.1,
 }
+
+# Validate scoring weights sum to 1.0
+_weights_sum = sum(SCORING_WEIGHTS.values())
+if abs(_weights_sum - 1.0) > 0.001:
+    raise ValueError(f"SCORING_WEIGHTS must sum to 1.0, got {_weights_sum}")
 
 # Maximum age for YouTube videos (in days)
 YOUTUBE_MAX_AGE_DAYS: int = 7
@@ -43,6 +49,6 @@ DEFAULT_NUM_CANDIDATES: int = 3
 # Output directory for blog posts
 DEFAULT_OUTPUT_DIR: str = "./posts"
 
-# Available sources (enabled by default)
-AVAILABLE_SOURCES: List[str] = ["hacker_news", "web", "youtube"]
+# LLM model name (can be overridden via environment variable)
+LLM_MODEL_NAME: str = os.environ.get("OPENAI_MODEL", "gpt-4")
 

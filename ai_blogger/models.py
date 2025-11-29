@@ -1,6 +1,10 @@
-"""Pydantic models for the AI Blogger."""
+"""Pydantic models for the AI Blogger.
 
-from typing import Optional
+Note: This module uses typing.List for compatibility with Python 3.8+,
+though the project requires Python 3.9+ for other features.
+"""
+
+from typing import List, Optional
 from pydantic import BaseModel, HttpUrl
 
 
@@ -20,7 +24,7 @@ class CandidatePost(BaseModel):
 
     title: str
     content: str
-    sources: list[str]
+    sources: List[str]
     topic: str
 
 

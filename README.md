@@ -4,6 +4,8 @@ A LangChain-based automated daily AI blogger that discovers new software-enginee
 
 Designed for **simple CLI execution** and **cron automation**.
 
+**Requires Python 3.9 or higher.**
+
 ## Features
 
 - **Modular, extensible architecture** for easy addition of new sources
@@ -108,6 +110,7 @@ python -m ai_blogger -v
 The fetcher architecture is modular and extensible. To add a new source:
 
 ```python
+from typing import List
 from ai_blogger.fetchers import BaseFetcher, register_fetcher
 from ai_blogger.models import Article
 
@@ -117,7 +120,7 @@ class MySourceFetcher(BaseFetcher):
     env_key = "MY_SOURCE_API_KEY"  # Optional, set to None if no key needed
     description = "Fetch articles from My Source"
 
-    def fetch(self, topic: str, max_results: int) -> list[Article]:
+    def fetch(self, topic: str, max_results: int) -> List[Article]:
         # Your implementation here
         articles = []
         # ... fetch and parse articles ...

@@ -4,16 +4,22 @@ from datetime import datetime
 from slugify import slugify as python_slugify
 
 
-def slugify(text: str) -> str:
+def slugify(text: str, max_length: int = 100) -> str:
     """Convert text to a URL-friendly slug.
 
     Args:
         text: The text to convert to a slug.
+        max_length: Maximum length of the slug (default: 100).
 
     Returns:
         A URL-friendly slug version of the text.
+
+    Note:
+        Slugs are truncated to max_length characters. For titles that may
+        share the same first max_length characters, consider using
+        generate_filename() which appends a date prefix for uniqueness.
     """
-    return python_slugify(text, max_length=100)
+    return python_slugify(text, max_length=max_length)
 
 
 def get_timestamp() -> str:

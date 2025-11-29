@@ -15,8 +15,20 @@ Example:
         def fetch(self, topic: str, max_results: int) -> List[Article]:
             # Implementation here
             pass
+
+Note:
+    API keys should be properly secured. For services like YouTube Data API,
+    consider restricting API keys in the Google Cloud Console by:
+    - IP address restrictions for server-side use
+    - HTTP referrer restrictions for client-side use
+    This prevents unauthorized use if keys are accidentally exposed in logs.
+
+    Be mindful of API quotas when fetching from multiple topics and sources.
+    YouTube Data API has a default quota of 10,000 units/day. Each search
+    request costs 100 units.
 """
 
+import logging
 import os
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
@@ -26,13 +38,14 @@ import requests
 from tavily import TavilyClient
 
 from .config import (
-    AVAILABLE_SOURCES,
     DEFAULT_MAX_RESULTS,
     SOURCE_DEFAULTS,
     TOPICS,
     YOUTUBE_MAX_AGE_DAYS,
 )
 from .models import Article
+
+logger = logging.getLogger(__name__)
 
 
 # Registry for fetcher classes
@@ -114,16 +127,34 @@ class BaseFetcher(ABC):
             return f"Warning: {self.env_key} not set, skipping {self.name}"
         return ""
 
-    @abstractmethod
-    def fetch(self, topic: str, max_results: int) -> List[Article]:
-        """Fetch articles for a given topic.
+    def _validate_inputs(self, topic: str, max_results: int) -> None:
+        """Validate input parameters for fetch operations.
 
         Args:
             topic: The topic to search for.
             max_results: Maximum number of results to return.
 
+        Raises:
+            ValueError: If topic is empty or max_results is not positive.
+        """
+        if not topic or not topic.strip():
+            raise ValueError("Topic cannot be empty")
+        if max_results < 1:
+            raise ValueError(f"max_results must be positive, got {max_results}")
+
+    @abstractmethod
+    def fetch(self, topic: str, max_results: int) -> List[Article]:
+        """Fetch articles for a given topic.
+
+        Args:
+            topic: The topic to search for (must not be empty).
+            max_results: Maximum number of results to return (must be positive).
+
         Returns:
             List of Article objects.
+
+        Raises:
+            ValueError: If topic is empty or max_results is not positive.
         """
         pass
 
@@ -146,6 +177,7 @@ class HackerNewsFetcher(BaseFetcher):
         Returns:
             List of Article objects from Hacker News.
         """
+        self._validate_inputs(topic, max_results)
         articles = []
 
         url = "https://hn.algolia.com/api/v1/search"
@@ -172,7 +204,7 @@ class HackerNewsFetcher(BaseFetcher):
                 )
                 articles.append(article)
         except requests.RequestException as e:
-            print(f"Error fetching Hacker News articles: {e}")
+            logger.error(f"Error fetching Hacker News articles: {e}")
 
         return articles
 
@@ -195,11 +227,12 @@ class WebSearchFetcher(BaseFetcher):
         Returns:
             List of Article objects from web search.
         """
+        self._validate_inputs(topic, max_results)
         articles = []
         api_key = os.environ.get(self.env_key)
 
         if not api_key:
-            print(self.get_missing_key_message())
+            logger.warning(self.get_missing_key_message())
             return articles
 
         try:
@@ -216,8 +249,13 @@ class WebSearchFetcher(BaseFetcher):
                     topic=topic,
                 )
                 articles.append(article)
+        except (requests.RequestException, ConnectionError, TimeoutError) as e:
+            logger.error(f"Error fetching web search articles (network): {e}")
+        except ValueError as e:
+            logger.error(f"Error fetching web search articles (invalid response): {e}")
         except Exception as e:
-            print(f"Error fetching web search articles: {e}")
+            # Log unexpected errors but don't crash - allow other sources to continue
+            logger.error(f"Unexpected error fetching web search articles: {type(e).__name__}: {e}")
 
         return articles
 
@@ -236,6 +274,12 @@ class YouTubeFetcher(BaseFetcher):
         Uses the YouTube Data API v3 to search for recent videos.
         Filters out videos older than 7 days.
 
+        Note:
+            The YouTube API key is passed as a URL parameter, which is standard
+            for the YouTube Data API. Ensure your API key is properly restricted
+            in the Google Cloud Console (by IP or referrer) to prevent unauthorized
+            use if logs containing URLs are exposed.
+
         Args:
             topic: The search query (topic).
             max_results: Maximum number of results to return.
@@ -243,11 +287,12 @@ class YouTubeFetcher(BaseFetcher):
         Returns:
             List of Article objects representing YouTube videos.
         """
+        self._validate_inputs(topic, max_results)
         articles = []
         api_key = os.environ.get(self.env_key)
 
         if not api_key:
-            print(self.get_missing_key_message())
+            logger.warning(self.get_missing_key_message())
             return articles
 
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=YOUTUBE_MAX_AGE_DAYS)
@@ -285,7 +330,7 @@ class YouTubeFetcher(BaseFetcher):
                         if published_at < cutoff_date:
                             continue
                     except ValueError as e:
-                        print(f"Warning: Could not parse date '{published_at_str}': {e}")
+                        logger.warning(f"Could not parse date '{published_at_str}': {e}")
 
                 title = snippet.get("title", "")
                 description = snippet.get("description", "")[:500]
@@ -310,7 +355,7 @@ class YouTubeFetcher(BaseFetcher):
                 )
                 articles.append(article)
         except requests.RequestException as e:
-            print(f"Error fetching YouTube videos: {e}")
+            logger.error(f"Error fetching YouTube videos: {e}")
 
         return articles
 
@@ -341,9 +386,16 @@ def fetch_all_articles(
 ) -> List[Article]:
     """Fetch articles from specified sources for the given topics.
 
+    Note:
+        Be mindful of API quotas when using multiple topics and sources.
+        - YouTube Data API: 10,000 units/day default, 100 units per search
+        - Tavily: Check your plan limits
+
+        For example, 9 topics × 5 results from YouTube = 9 API calls = 900 units.
+
     Args:
         topics: List of topics to search for. Defaults to config topics.
-        sources: List of source names to use. Defaults to all available sources.
+        sources: List of source names to use. Defaults to all registered sources.
         max_results: Dict mapping source names to max results.
                     Defaults to SOURCE_DEFAULTS.
 
@@ -354,7 +406,7 @@ def fetch_all_articles(
         topics = TOPICS
 
     if sources is None:
-        sources = AVAILABLE_SOURCES
+        sources = get_available_sources()
 
     if max_results is None:
         max_results = SOURCE_DEFAULTS.copy()
