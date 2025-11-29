@@ -249,7 +249,7 @@ class WebSearchFetcher(BaseFetcher):
                     topic=topic,
                 )
                 articles.append(article)
-        except (requests.RequestException, ConnectionError, TimeoutError) as e:
+        except requests.RequestException as e:
             logger.error(f"Error fetching web search articles (network): {e}")
         except ValueError as e:
             logger.error(f"Error fetching web search articles (invalid response): {e}")

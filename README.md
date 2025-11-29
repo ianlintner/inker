@@ -185,6 +185,58 @@ topics → fetch_all_articles(sources=[...])
 - Requires `TAVILY_API_KEY` environment variable
 - Provides general web search results
 
+## Development
+
+### Running Tests
+
+```bash
+# Install dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest tests/ -v
+
+# Run with coverage
+pytest tests/ -v --cov=ai_blogger
+```
+
+### Code Formatting
+
+```bash
+# Format code
+black ai_blogger/
+isort ai_blogger/
+
+# Check formatting
+black --check ai_blogger/
+isort --check-only ai_blogger/
+```
+
+### Docker
+
+```bash
+# Build the image
+docker build -t ai-blogger .
+
+# Run with environment variables
+docker run --rm \
+  -e OPENAI_API_KEY=your-key \
+  -e TAVILY_API_KEY=your-key \
+  -e YOUTUBE_API_KEY=your-key \
+  -v $(pwd)/posts:/app/posts \
+  ai-blogger --num-posts 3 --out-dir /app/posts
+```
+
+## CI/CD
+
+The project includes a GitHub Actions workflow (`.github/workflows/ci.yml`) that:
+
+- **Format Check**: Validates code formatting with Black and isort
+- **Lint**: Runs flake8 for code quality
+- **Test**: Runs pytest across Python 3.9, 3.10, 3.11, and 3.12
+- **Build**: Creates a Python package distribution
+- **Docker**: Builds and tests the Docker image
+
 ## License
 
 MIT

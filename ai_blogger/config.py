@@ -25,9 +25,12 @@ SCORING_WEIGHTS: Dict[str, float] = {
     "engagement": 0.1,
 }
 
+# Tolerance for floating-point comparison of weights
+WEIGHTS_TOLERANCE: float = 0.001
+
 # Validate scoring weights sum to 1.0
 _weights_sum = sum(SCORING_WEIGHTS.values())
-if abs(_weights_sum - 1.0) > 0.001:
+if abs(_weights_sum - 1.0) > WEIGHTS_TOLERANCE:
     raise ValueError(f"SCORING_WEIGHTS must sum to 1.0, got {_weights_sum}")
 
 # Maximum age for YouTube videos (in days)
