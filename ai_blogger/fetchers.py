@@ -161,8 +161,8 @@ def fetch_youtube_trending_videos(
                     # Double-check the video is within the allowed age
                     if published_at < cutoff_date:
                         continue
-                except ValueError:
-                    pass
+                except ValueError as e:
+                    print(f"Warning: Could not parse date '{published_at_str}': {e}")
 
             title = snippet.get("title", "")
             description = snippet.get("description", "")[:500]
@@ -171,6 +171,10 @@ def fetch_youtube_trending_videos(
                 snippet.get("thumbnails", {}).get("high", {}).get("url")
                 or snippet.get("thumbnails", {}).get("default", {}).get("url")
             )
+
+            # Skip if title is empty
+            if not title:
+                continue
 
             # Create summary with channel info
             summary = f"[{channel_title}] {description}"

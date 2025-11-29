@@ -69,11 +69,20 @@ Generate {num_candidates} distinct blog post candidates. Return valid JSON only.
 
     try:
         candidates_data = json.loads(response.content)
+        if not isinstance(candidates_data, list):
+            print(f"Error: Expected list of candidates, got {type(candidates_data)}")
+            return []
         candidates = []
         for data in candidates_data:
+            if not isinstance(data, dict):
+                continue
+            title = data.get("title", "")
+            content = data.get("content", "")
+            if not title or not content:
+                continue
             candidate = CandidatePost(
-                title=data.get("title", ""),
-                content=data.get("content", ""),
+                title=title,
+                content=content,
                 sources=data.get("sources", []),
                 topic=data.get("topic", ""),
             )
@@ -81,6 +90,7 @@ Generate {num_candidates} distinct blog post candidates. Return valid JSON only.
         return candidates
     except json.JSONDecodeError as e:
         print(f"Error parsing candidate posts: {e}")
+        print(f"Raw response: {response.content[:500]}")
         return []
 
 
@@ -124,6 +134,10 @@ Provide your scoring as valid JSON only.""")
 
     try:
         score_data = json.loads(response.content)
+        if not isinstance(score_data, dict):
+            print(f"Error: Expected dict for score, got {type(score_data)}")
+            print(f"Raw response: {response.content[:500]}")
+            raise ValueError("Invalid score format")
 
         # Calculate weighted total score
         weights = SCORING_WEIGHTS
@@ -145,8 +159,9 @@ Provide your scoring as valid JSON only.""")
             reasoning=score_data.get("reasoning", ""),
         )
         return ScoredPost(candidate=candidate, score=score)
-    except json.JSONDecodeError as e:
+    except (json.JSONDecodeError, ValueError) as e:
         print(f"Error parsing score: {e}")
+        print(f"Raw response: {response.content[:500]}")
         # Return a default low score on error
         score = PostScore(
             relevance=0,

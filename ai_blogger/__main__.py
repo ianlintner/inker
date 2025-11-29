@@ -55,6 +55,12 @@ def main():
         print("Error: OPENAI_API_KEY environment variable is required")
         sys.exit(1)
 
+    # Warn about optional API keys
+    if not os.environ.get("TAVILY_API_KEY"):
+        print("Warning: TAVILY_API_KEY not set - web search will be disabled")
+    if not os.environ.get("YOUTUBE_API_KEY"):
+        print("Warning: YOUTUBE_API_KEY not set - YouTube trending will be disabled")
+
     topics = args.topics or TOPICS
 
     if args.dry_run:
