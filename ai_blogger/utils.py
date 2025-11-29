@@ -1,6 +1,7 @@
 """Utility functions for the AI Blogger."""
 
 from datetime import datetime
+
 from slugify import slugify as python_slugify
 
 

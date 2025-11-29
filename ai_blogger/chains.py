@@ -7,7 +7,7 @@ from typing import List
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from .config import LLM_MODEL_NAME, SCORING_WEIGHTS, DEFAULT_NUM_CANDIDATES
+from .config import DEFAULT_NUM_CANDIDATES, LLM_MODEL_NAME, SCORING_WEIGHTS
 from .models import Article, CandidatePost, PostScore, ScoredPost
 
 logger = logging.getLogger(__name__)
@@ -30,9 +30,7 @@ def get_llm(temperature: float = 0.7) -> ChatOpenAI:
     return ChatOpenAI(model=LLM_MODEL_NAME, temperature=temperature)
 
 
-def generate_candidates(
-    articles: List[Article], num_candidates: int = DEFAULT_NUM_CANDIDATES
-) -> List[CandidatePost]:
+def generate_candidates(articles: List[Article], num_candidates: int = DEFAULT_NUM_CANDIDATES) -> List[CandidatePost]:
     """Generate candidate blog posts from articles.
 
     Args:
@@ -45,12 +43,13 @@ def generate_candidates(
     llm = get_llm(temperature=0.8)
 
     # Format articles for the prompt
-    articles_json = json.dumps(
-        [article.model_dump(mode='json') for article in articles], indent=2
-    )
+    articles_json = json.dumps([article.model_dump(mode="json") for article in articles], indent=2)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are an expert technical blogger specializing in software engineering, AI, and developer productivity.
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are an expert technical blogger specializing in software engineering, AI, and developer productivity.
 Your task is to generate {num_candidates} distinct blog post drafts based on the provided news articles and videos.
 
 Each blog post should:
@@ -61,19 +60,21 @@ Each blog post should:
 - Be engaging and informative for a technical audience
 - Be 800-1500 words
 
-Output your response as a valid JSON array of objects with keys: title, content, sources (list of URLs used), topic."""),
-        ("human", """Here are the articles and videos to use as sources:
+Output your response as a valid JSON array of objects with keys: title, content, sources (list of URLs used), topic.""",
+            ),
+            (
+                "human",
+                """Here are the articles and videos to use as sources:
 
 {articles}
 
-Generate {num_candidates} distinct blog post candidates. Return valid JSON only.""")
-    ])
+Generate {num_candidates} distinct blog post candidates. Return valid JSON only.""",
+            ),
+        ]
+    )
 
     chain = prompt | llm
-    response = chain.invoke({
-        "articles": articles_json,
-        "num_candidates": num_candidates
-    })
+    response = chain.invoke({"articles": articles_json, "num_candidates": num_candidates})
 
     try:
         candidates_data = json.loads(response.content)
@@ -114,8 +115,11 @@ def score_candidate(candidate: CandidatePost) -> ScoredPost:
     """
     llm = get_llm(temperature=0.3)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a critical blog post evaluator. Score the following blog post on these criteria (0-10 scale):
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a critical blog post evaluator. Score the following blog post on these criteria (0-10 scale):
 
 1. Relevance: How relevant is the content to software engineering and tech audiences?
 2. Originality: How unique and insightful is the perspective?
@@ -123,23 +127,30 @@ def score_candidate(candidate: CandidatePost) -> ScoredPost:
 4. Clarity: How clear and well-structured is the writing?
 5. Engagement: How likely is it to capture and hold reader attention?
 
-Provide your response as a JSON object with keys: relevance, originality, depth, clarity, engagement, reasoning (brief explanation of scores)."""),
-        ("human", """Title: {title}
+Provide your response as a JSON object with keys: relevance, originality, depth, clarity, engagement, reasoning (brief explanation of scores).""",
+            ),
+            (
+                "human",
+                """Title: {title}
 
 Content:
 {content}
 
 Sources used: {sources}
 
-Provide your scoring as valid JSON only.""")
-    ])
+Provide your scoring as valid JSON only.""",
+            ),
+        ]
+    )
 
     chain = prompt | llm
-    response = chain.invoke({
-        "title": candidate.title,
-        "content": candidate.content,
-        "sources": ", ".join(candidate.sources),
-    })
+    response = chain.invoke(
+        {
+            "title": candidate.title,
+            "content": candidate.content,
+            "sources": ", ".join(candidate.sources),
+        }
+    )
 
     try:
         score_data = json.loads(response.content)
@@ -209,8 +220,11 @@ def refine_winner(winner: ScoredPost) -> str:
     """
     llm = get_llm(temperature=0.6)
 
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a professional blog editor. Your task is to refine and polish the following blog post.
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are a professional blog editor. Your task is to refine and polish the following blog post.
 
 Improvements to make:
 - Enhance the introduction to hook readers
@@ -222,8 +236,11 @@ Improvements to make:
 
 Based on the scoring feedback, focus especially on areas that scored lower.
 
-Output the final polished blog post in Markdown format."""),
-        ("human", """Original post:
+Output the final polished blog post in Markdown format.""",
+            ),
+            (
+                "human",
+                """Original post:
 
 Title: {title}
 
@@ -239,20 +256,24 @@ Scoring feedback:
 
 Feedback: {reasoning}
 
-Please provide the refined blog post in Markdown format, starting with the title as an H1 header.""")
-    ])
+Please provide the refined blog post in Markdown format, starting with the title as an H1 header.""",
+            ),
+        ]
+    )
 
     chain = prompt | llm
-    response = chain.invoke({
-        "title": winner.candidate.title,
-        "content": winner.candidate.content,
-        "relevance": winner.score.relevance,
-        "originality": winner.score.originality,
-        "depth": winner.score.depth,
-        "clarity": winner.score.clarity,
-        "engagement": winner.score.engagement,
-        "reasoning": winner.score.reasoning,
-    })
+    response = chain.invoke(
+        {
+            "title": winner.candidate.title,
+            "content": winner.candidate.content,
+            "relevance": winner.score.relevance,
+            "originality": winner.score.originality,
+            "depth": winner.score.depth,
+            "clarity": winner.score.clarity,
+            "engagement": winner.score.engagement,
+            "reasoning": winner.score.reasoning,
+        }
+    )
 
     # Add metadata header
     sources_list = "\n".join(f"- {source}" for source in winner.candidate.sources)

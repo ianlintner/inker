@@ -54,4 +54,3 @@ DEFAULT_OUTPUT_DIR: str = "./posts"
 
 # LLM model name (can be overridden via environment variable)
 LLM_MODEL_NAME: str = os.environ.get("OPENAI_MODEL", "gpt-4")
-

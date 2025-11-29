@@ -56,7 +56,7 @@ Examples:
   python -m ai_blogger --topics "AI" "machine learning" --sources web youtube
 
 Requires Python 3.9 or higher.
-"""
+""",
     )
     parser.add_argument(
         "--num-posts",
@@ -112,13 +112,14 @@ Requires Python 3.9 or higher.
 
     # Configure logging based on verbosity
     log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(level=log_level, format='%(levelname)s: %(message)s')
+    logging.basicConfig(level=log_level, format="%(levelname)s: %(message)s")
 
     # Handle list-sources
     if args.list_sources:
         print("Available sources:")
         for name in get_available_sources():
             from .fetchers import get_fetcher
+
             fetcher = get_fetcher(name)
             if fetcher:
                 status = "✓" if fetcher.is_available() else "✗ (missing API key)"

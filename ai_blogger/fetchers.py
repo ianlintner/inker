@@ -66,9 +66,11 @@ def register_fetcher(name: str) -> Callable[[Type["BaseFetcher"]], Type["BaseFet
         class MySourceFetcher(BaseFetcher):
             ...
     """
+
     def decorator(cls: Type["BaseFetcher"]) -> Type["BaseFetcher"]:
         _FETCHER_REGISTRY[name] = cls
         return cls
+
     return decorator
 
 
@@ -324,9 +326,7 @@ class YouTubeFetcher(BaseFetcher):
                 published_at_str = snippet.get("publishedAt", "")
                 if published_at_str:
                     try:
-                        published_at = datetime.fromisoformat(
-                            published_at_str.replace("Z", "+00:00")
-                        )
+                        published_at = datetime.fromisoformat(published_at_str.replace("Z", "+00:00"))
                         if published_at < cutoff_date:
                             continue
                     except ValueError as e:
@@ -335,10 +335,9 @@ class YouTubeFetcher(BaseFetcher):
                 title = snippet.get("title", "")
                 description = snippet.get("description", "")[:500]
                 channel_title = snippet.get("channelTitle", "")
-                thumbnail = (
-                    snippet.get("thumbnails", {}).get("high", {}).get("url")
-                    or snippet.get("thumbnails", {}).get("default", {}).get("url")
-                )
+                thumbnail = snippet.get("thumbnails", {}).get("high", {}).get("url") or snippet.get(
+                    "thumbnails", {}
+                ).get("default", {}).get("url")
 
                 if not title:
                     continue
@@ -361,19 +360,25 @@ class YouTubeFetcher(BaseFetcher):
 
 
 # Legacy function wrappers for backward compatibility
-def fetch_hacker_news_articles(topic: str, max_results: int = SOURCE_DEFAULTS.get("hacker_news", DEFAULT_MAX_RESULTS)) -> List[Article]:
+def fetch_hacker_news_articles(
+    topic: str, max_results: int = SOURCE_DEFAULTS.get("hacker_news", DEFAULT_MAX_RESULTS)
+) -> List[Article]:
     """Fetch articles from Hacker News (legacy wrapper)."""
     fetcher = get_fetcher("hacker_news")
     return fetcher.fetch(topic, max_results) if fetcher else []
 
 
-def fetch_web_search_articles(topic: str, max_results: int = SOURCE_DEFAULTS.get("web", DEFAULT_MAX_RESULTS)) -> List[Article]:
+def fetch_web_search_articles(
+    topic: str, max_results: int = SOURCE_DEFAULTS.get("web", DEFAULT_MAX_RESULTS)
+) -> List[Article]:
     """Fetch articles from web search (legacy wrapper)."""
     fetcher = get_fetcher("web")
     return fetcher.fetch(topic, max_results) if fetcher else []
 
 
-def fetch_youtube_trending_videos(query: str, max_results: int = SOURCE_DEFAULTS.get("youtube", DEFAULT_MAX_RESULTS)) -> List[Article]:
+def fetch_youtube_trending_videos(
+    query: str, max_results: int = SOURCE_DEFAULTS.get("youtube", DEFAULT_MAX_RESULTS)
+) -> List[Article]:
     """Fetch trending YouTube videos (legacy wrapper)."""
     fetcher = get_fetcher("youtube")
     return fetcher.fetch(query, max_results) if fetcher else []

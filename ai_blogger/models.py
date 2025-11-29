@@ -5,6 +5,7 @@ though the project requires Python 3.9+ for other features.
 """
 
 from typing import List, Optional
+
 from pydantic import BaseModel, HttpUrl
 
 
