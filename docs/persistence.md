@@ -407,8 +407,14 @@ stats = storage.get_stats()
 
 print(f"Total posts: {stats.total_posts}")
 print(f"Pending approval: {stats.pending_approval}")
-print(f"Approval rate: {stats.approval_rate:.1f}%")
-print(f"Avg approval time: {stats.avg_approval_time_hours:.1f} hours")
+if stats.approval_rate is not None:
+    print(f"Approval rate: {stats.approval_rate:.1f}%")
+else:
+    print("Approval rate: N/A")
+if stats.avg_approval_time_hours is not None:
+    print(f"Avg approval time: {stats.avg_approval_time_hours:.1f} hours")
+else:
+    print("Avg approval time: N/A")
 ```
 
 ## See Also

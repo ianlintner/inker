@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
+import threading
 import uuid
 from contextlib import contextmanager
 from datetime import datetime
@@ -70,6 +71,7 @@ class PostgresStorage(StorageBackend):
 
         self.config = config
         self._pool: Optional[Any] = None
+        self._pool_lock = threading.RLock()
         self._initialized = False
 
         if config.auto_migrate:
@@ -78,11 +80,13 @@ class PostgresStorage(StorageBackend):
     def _get_pool(self) -> Any:
         """Get or create the connection pool."""
         if self._pool is None:
-            self._pool = psycopg2.pool.ThreadedConnectionPool(
-                minconn=1,
-                maxconn=self.config.pool_size,
-                dsn=self.config.connection_string,
-            )
+            with self._pool_lock:
+                if self._pool is None:  # Double-check pattern
+                    self._pool = psycopg2.pool.ThreadedConnectionPool(
+                        minconn=1,
+                        maxconn=self.config.pool_size,
+                        dsn=self.config.connection_string,
+                    )
         return self._pool
 
     @contextmanager
@@ -112,30 +116,31 @@ class PostgresStorage(StorageBackend):
 
     def initialize(self) -> None:
         """Initialize the database schema."""
-        if self._initialized:
-            return
+        with self._pool_lock:
+            if self._initialized:
+                return
 
-        with self._cursor() as cursor:
-            # Create schema version table
-            cursor.execute(
+            with self._cursor() as cursor:
+                # Create schema version table
+                cursor.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS schema_version (
+                        version INTEGER PRIMARY KEY,
+                        applied_at TIMESTAMPTZ NOT NULL
+                    )
                 """
-                CREATE TABLE IF NOT EXISTS schema_version (
-                    version INTEGER PRIMARY KEY,
-                    applied_at TIMESTAMPTZ NOT NULL
                 )
-            """
-            )
 
-            # Check current version
-            cursor.execute("SELECT MAX(version) FROM schema_version")
-            row = cursor.fetchone()
-            current_version = row["max"] if row and row["max"] else 0
+                # Check current version
+                cursor.execute("SELECT MAX(version) FROM schema_version")
+                row = cursor.fetchone()
+                current_version = row["max"] if row and row["max"] else 0
 
-            if current_version < SCHEMA_VERSION:
-                self._run_migrations(cursor, current_version)
+                if current_version < SCHEMA_VERSION:
+                    self._run_migrations(cursor, current_version)
 
-        self._initialized = True
-        logger.info("PostgreSQL storage initialized")
+            self._initialized = True
+            logger.info("PostgreSQL storage initialized")
 
     def _run_migrations(self, cursor: Any, from_version: int) -> None:
         """Run database migrations."""
