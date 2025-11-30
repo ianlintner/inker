@@ -5,6 +5,17 @@ Requires Python 3.9 or higher.
 
 from .chains import generate_candidates, refine_winner, score_candidates
 from .config import LLM_MODEL_NAME, SOURCE_DEFAULTS, TOPICS
+from .feedback_api import FeedbackService
+from .feedback_models import (
+    ApprovalRequest,
+    FeedbackCategory,
+    FeedbackEntry,
+    FeedbackRating,
+    FeedbackResponse,
+    FeedbackStats,
+    RejectionRequest,
+    RevisionRequest,
+)
 from .fetchers import (
     BaseFetcher,
     fetch_all_articles,
@@ -92,6 +103,16 @@ __all__ = [
     "JobHistoryEntry",
     "JobStats",
     "SQLiteStorage",
+    # Feedback API
+    "FeedbackService",
+    "ApprovalRequest",
+    "RejectionRequest",
+    "RevisionRequest",
+    "FeedbackCategory",
+    "FeedbackRating",
+    "FeedbackEntry",
+    "FeedbackStats",
+    "FeedbackResponse",
     # Utils
     "generate_filename",
     "get_date_string",
