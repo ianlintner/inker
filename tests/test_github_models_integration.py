@@ -10,8 +10,10 @@ Run with:
 import json
 import os
 import re
+import time
 
 import pytest
+from openai import RateLimitError
 
 # Skip all tests in this module if GITHUB_TOKEN is not set
 pytestmark = pytest.mark.integration
@@ -63,6 +65,33 @@ def parse_json_response(content: str) -> dict:
         pytest.fail(f"Failed to parse JSON response: {e}. Response was: {extracted}")
 
 
+def invoke_with_retry(llm, messages, max_retries=3, initial_delay=2):
+    """Invoke LLM with retry logic for rate limit errors.
+
+    Args:
+        llm: The LLM instance to invoke.
+        messages: Messages to send to the LLM.
+        max_retries: Maximum number of retry attempts.
+        initial_delay: Initial delay in seconds between retries.
+
+    Returns:
+        The LLM response.
+
+    Raises:
+        RateLimitError: If all retries are exhausted.
+    """
+    delay = initial_delay
+    for attempt in range(max_retries):
+        try:
+            return llm.invoke(messages)
+        except RateLimitError:
+            if attempt == max_retries - 1:
+                pytest.skip("Rate limit exceeded after retries - skipping test")
+            time.sleep(delay)
+            delay *= 2  # Exponential backoff
+    return None
+
+
 @pytest.fixture
 def github_models_llm():
     """Create a ChatOpenAI instance configured for GitHub Models."""
@@ -89,7 +118,7 @@ class TestGitHubModelsConnection:
         from langchain_core.messages import HumanMessage
 
         messages = [HumanMessage(content="What is 1 + 1? Please respond with just the number.")]
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
 
         assert response is not None
         assert response.content is not None
@@ -103,7 +132,7 @@ class TestGitHubModelsConnection:
             SystemMessage(content="You are a helpful assistant. Answer concisely."),
             HumanMessage(content="What is 2 + 2? Answer with just the number."),
         ]
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
 
         assert response is not None
         # The response should contain "4" somewhere
@@ -123,7 +152,7 @@ class TestBlogGeneration:
                 content="Write a single paragraph (3-4 sentences) about the benefits of AI in software development."
             ),
         ]
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
 
         assert response is not None
         assert len(response.content) > 100  # Should be at least a paragraph
@@ -143,7 +172,7 @@ class TestBlogGeneration:
                 content='Create a simple JSON object with keys "title" and "summary" about AI in software development.'
             ),
         ]
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
 
         assert response is not None
         # Extract JSON and parse with error handling
@@ -174,7 +203,7 @@ class TestScoringCapability:
                 )
             ),
         ]
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
 
         assert response is not None
         # Extract JSON and parse with error handling
@@ -196,6 +225,6 @@ class TestErrorHandling:
         long_content = "AI is transforming software development. " * 50
         messages = [HumanMessage(content=f"Summarize this in one sentence: {long_content}")]
 
-        response = github_models_llm.invoke(messages)
+        response = invoke_with_retry(github_models_llm, messages)
         assert response is not None
         assert len(response.content) > 0
