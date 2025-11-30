@@ -42,12 +42,17 @@ dev = [
     "mypy",
     "pytest",
     "pytest-cov",
+    "httpx",
 ]
 docs = [
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.0.0",
     "mkdocs-mermaid2-plugin>=1.0.0",
     "pymdown-extensions>=10.0.0",
+]
+api = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
 ]
 
 [project.scripts]
