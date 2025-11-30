@@ -276,8 +276,55 @@ ai_blogger/
 ├── fetchers.py       # Modular fetcher architecture
 ├── chains.py         # LangChain chains
 ├── models.py         # Pydantic data models
-└── utils.py          # Utility functions
+├── utils.py          # Utility functions
+├── job_api.py        # Job API service
+├── job_models.py     # Job data models
+├── job_store.py      # File-based job storage
+└── persistence/      # Modular persistence layer
+    ├── __init__.py   # Persistence exports
+    ├── base.py       # Abstract storage interface
+    ├── factory.py    # Storage factory
+    ├── models.py     # Persistence models
+    ├── sqlite_storage.py    # SQLite backend
+    └── postgres_storage.py  # PostgreSQL backend
 ```
+
+## Persistence Architecture
+
+The persistence layer provides modular storage with multiple backend options:
+
+```mermaid
+flowchart TB
+    subgraph API["API Layer"]
+        JOB[JobService]
+        REST[REST Endpoints]
+    end
+    
+    subgraph Persistence["Persistence Layer"]
+        FACTORY[StorageFactory]
+        SQLITE[SQLiteStorage]
+        PG[PostgresStorage]
+    end
+    
+    subgraph Data["Data Stores"]
+        SQLITE_DB[(SQLite)]
+        PG_DB[(PostgreSQL)]
+    end
+    
+    JOB & REST --> FACTORY
+    FACTORY --> SQLITE & PG
+    SQLITE --> SQLITE_DB
+    PG --> PG_DB
+```
+
+### Supported Backends
+
+| Backend | Use Case | Requirements |
+|---------|----------|--------------|
+| SQLite | Development, local storage | None (built-in) |
+| PostgreSQL | Production deployments | psycopg2 |
+
+See [Persistence Layer](persistence.md) for detailed documentation.
 
 ## External Dependencies
 
@@ -336,6 +383,7 @@ flowchart TD
 
 ## See Also
 
+- [Persistence Layer](persistence.md) - Storage backend documentation
 - [Developer Guide](developer-guide.md) - Extending the system
 - [API Reference](api-reference.md) - Detailed module documentation
 - [Operations](operations.md) - Deployment and monitoring

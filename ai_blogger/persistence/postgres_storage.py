@@ -361,7 +361,9 @@ class PostgresStorage(StorageBackend):
             return None
 
         now = datetime.now()
-        updates = []
+        # Column names are hard-coded below - NOT derived from user input
+        # This is safe from SQL injection as only values are parameterized
+        updates: List[str] = []
         params: List[Any] = []
 
         if update.title is not None:

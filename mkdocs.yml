@@ -59,6 +59,7 @@ nav:
   - Home: index.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
+  - Persistence: persistence.md
   - Developer Guide: developer-guide.md
   - API Reference: api-reference.md
   - Operations: operations.md
