@@ -8,7 +8,7 @@ It integrates with the persistence layer and job history.
 import logging
 import uuid
 from datetime import datetime
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from .feedback_models import (
     ApprovalRequest,
@@ -337,7 +337,7 @@ class FeedbackService:
         posts = self.storage.list_posts(limit=1000)
 
         # Calculate topic-based stats
-        feedback_by_topic: dict[str, dict[str, int]] = {}
+        feedback_by_topic: Dict[str, Dict[str, int]] = {}
         for post in posts:
             topic = post.topic
             if topic not in feedback_by_topic:
