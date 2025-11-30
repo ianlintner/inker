@@ -25,3 +25,8 @@ posts/
 # Local development
 *.log
 *.env
+
+# Build artifacts
+*.egg-info/
+dist/
+build/

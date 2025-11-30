@@ -74,7 +74,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov
+          pip install pytest pytest-cov pytest-bdd
 
       - name: Test imports
         run: |
@@ -144,4 +144,4 @@ jobs:
       - name: Test Docker image
         run: |
           docker build -t ai-blogger:test .
-          docker run --rm ai-blogger:test python -c "from ai_blogger import *; print('Docker import successful')"
+          docker run --rm --entrypoint python ai-blogger:test -c 'from ai_blogger import *; print("Docker import successful")'
