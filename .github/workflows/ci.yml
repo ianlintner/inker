@@ -98,7 +98,7 @@ jobs:
           pytest tests/ -v --cov=ai_blogger --cov-report=xml || echo "No tests found, skipping"
 
   integration-test:
-    name: Integration Test with GitHub Models
+    name: Integration Tests
     runs-on: ubuntu-latest
     needs: [format, lint, test]
     # Only run if the secret is available (won't run on forks)
@@ -117,7 +117,17 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Run integration tests with GitHub Models
+      - name: Run Hacker News integration tests
+        run: |
+          pytest tests/test_fetchers_integration.py -v -m integration -k "HackerNews or Availability or Combined"
+
+      - name: Run Tavily integration tests
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_KEY }}
+        run: |
+          pytest tests/test_fetchers_integration.py -v -m integration -k "TavilyIntegration"
+
+      - name: Run GitHub Models integration tests
         env:
           GITHUB_TOKEN: ${{ secrets.MODEL_PAT }}
         run: |
