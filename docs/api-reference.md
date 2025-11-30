@@ -519,6 +519,17 @@ from ai_blogger import (
     get_fetcher,
     fetch_all_articles,
     
+    # Feedback API
+    FeedbackService,
+    ApprovalRequest,
+    RejectionRequest,
+    RevisionRequest,
+    FeedbackCategory,
+    FeedbackRating,
+    FeedbackEntry,
+    FeedbackStats,
+    FeedbackResponse,
+    
     # Utilities
     slugify,
     get_timestamp,
@@ -527,8 +538,212 @@ from ai_blogger import (
 )
 ```
 
+---
+
+## ai_blogger.feedback_api
+
+The Feedback API provides structured endpoints for blog post approval, rejection, and editorial feedback. It is designed to support learning from editorial outcomes.
+
+### FeedbackService
+
+Service for managing blog post feedback and approvals.
+
+```python
+class FeedbackService:
+    def __init__(self, storage: StorageBackend):
+        """Initialize with a storage backend."""
+        
+    def approve_post(self, request: ApprovalRequest) -> FeedbackResponse: ...
+    def reject_post(self, request: RejectionRequest) -> FeedbackResponse: ...
+    def request_revision(self, request: RevisionRequest) -> FeedbackResponse: ...
+    def get_post_feedback(self, post_id: str) -> List[FeedbackEntry]: ...
+    def get_feedback_stats(self) -> FeedbackStats: ...
+    def get_learning_data(self, limit: int = 100) -> List[dict]: ...
+```
+
+**Example:**
+
+```python
+from ai_blogger import FeedbackService, ApprovalRequest, create_storage
+
+storage = create_storage()
+feedback_service = FeedbackService(storage)
+
+# Approve a post
+response = feedback_service.approve_post(ApprovalRequest(
+    post_id="post-123",
+    feedback="Excellent content!",
+    actor="reviewer-1",
+))
+print(f"Post approved: {response.success}")
+```
+
+### ApprovalRequest
+
+Request to approve a blog post.
+
+```python
+class ApprovalRequest(BaseModel):
+    post_id: str
+    feedback: Optional[str] = None
+    ratings: List[FeedbackRating] = []
+    actor: Optional[str] = None
+```
+
+### RejectionRequest
+
+Request to reject a blog post. Feedback is required.
+
+```python
+class RejectionRequest(BaseModel):
+    post_id: str
+    feedback: str  # Required
+    categories: List[FeedbackCategory] = []
+    ratings: List[FeedbackRating] = []
+    actor: Optional[str] = None
+```
+
+### RevisionRequest
+
+Request revision for a blog post. Feedback is required.
+
+```python
+class RevisionRequest(BaseModel):
+    post_id: str
+    feedback: str  # Required
+    categories: List[FeedbackCategory] = []
+    ratings: List[FeedbackRating] = []
+    actor: Optional[str] = None
+```
+
+### FeedbackCategory
+
+Categories for classifying editorial feedback.
+
+| Category | Value | Description |
+|----------|-------|-------------|
+| QUALITY | "quality" | Overall quality issues |
+| RELEVANCE | "relevance" | Topic/content relevance |
+| ACCURACY | "accuracy" | Factual accuracy concerns |
+| CLARITY | "clarity" | Writing clarity issues |
+| ENGAGEMENT | "engagement" | Reader engagement concerns |
+| LENGTH | "length" | Content length issues |
+| STYLE | "style" | Writing style feedback |
+| SOURCES | "sources" | Source quality/citation issues |
+| OTHER | "other" | Miscellaneous feedback |
+
+### FeedbackRating
+
+Structured rating for a specific aspect of a blog post.
+
+```python
+class FeedbackRating(BaseModel):
+    category: FeedbackCategory
+    score: int  # 1-5 scale (1=poor, 5=excellent)
+    comment: Optional[str] = None
+```
+
+**Example:**
+
+```python
+from ai_blogger import FeedbackRating, FeedbackCategory
+
+rating = FeedbackRating(
+    category=FeedbackCategory.QUALITY,
+    score=4,
+    comment="Good overall quality, minor improvements needed",
+)
+```
+
+### FeedbackEntry
+
+A feedback entry capturing editorial input for learning.
+
+```python
+class FeedbackEntry(BaseModel):
+    id: str
+    post_id: str
+    job_id: Optional[str] = None
+    action: str  # "approved", "rejected", "revision_requested"
+    feedback: Optional[str] = None
+    categories: List[FeedbackCategory] = []
+    ratings: List[FeedbackRating] = []
+    actor: Optional[str] = None
+    post_scoring: Optional[Dict[str, Any]] = None
+    post_topic: Optional[str] = None
+    post_word_count: Optional[int] = None
+    created_at: datetime
+```
+
+### FeedbackStats
+
+Aggregated feedback statistics for learning.
+
+```python
+class FeedbackStats(BaseModel):
+    total_feedback: int = 0
+    approvals: int = 0
+    rejections: int = 0
+    revisions: int = 0
+    approval_rate: Optional[float] = None
+    avg_quality_score: Optional[float] = None
+    avg_relevance_score: Optional[float] = None
+    avg_clarity_score: Optional[float] = None
+    avg_engagement_score: Optional[float] = None
+    common_rejection_categories: List[str] = []
+    avg_time_to_decision_hours: Optional[float] = None
+    feedback_by_topic: Dict[str, Dict[str, Any]] = {}
+```
+
+### FeedbackResponse
+
+Response after providing feedback on a blog post.
+
+```python
+class FeedbackResponse(BaseModel):
+    success: bool
+    post_id: str
+    new_status: str
+    feedback_id: str
+    message: str
+```
+
+---
+
+## Feedback Learning System
+
+The Feedback API is designed to support learning from editorial outcomes. The `get_learning_data()` method returns structured data suitable for training or refining content generation algorithms.
+
+```python
+from ai_blogger import FeedbackService, create_storage
+
+storage = create_storage()
+feedback_service = FeedbackService(storage)
+
+# Get learning data from past decisions
+learning_data = feedback_service.get_learning_data(limit=100)
+
+for entry in learning_data:
+    print(f"Post: {entry['title']}")
+    print(f"Topic: {entry['topic']}")
+    print(f"Outcome: {entry['outcome']}")  # 'approved' or 'rejected'
+    print(f"Feedback: {entry['feedback']}")
+    print(f"Scoring: {entry['scoring']}")
+    print("---")
+```
+
+### Future Feedback-Based Ranking
+
+The feedback data can be used to:
+
+1. **Train ranking models**: Use approval/rejection patterns to improve candidate scoring
+2. **Topic preference learning**: Identify which topics have higher approval rates
+3. **Content style optimization**: Learn from feedback categories to improve content generation
+4. **Reviewer calibration**: Track reviewer patterns for consistency
+
 ## See Also
 
 - [Architecture](architecture.md) - System design overview
 - [Developer Guide](developer-guide.md) - Extension guide
 - [Operations](operations.md) - Deployment guide
+- [Persistence](persistence.md) - Storage layer documentation

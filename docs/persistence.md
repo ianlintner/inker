@@ -420,5 +420,5 @@ else:
 ## See Also
 
 - [Architecture](architecture.md) - System design overview
-- [API Reference](api-reference.md) - Detailed module documentation
+- [API Reference](api-reference.md) - Detailed module documentation (including Feedback API)
 - [Developer Guide](developer-guide.md) - Extension guide
