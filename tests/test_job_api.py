@@ -1,6 +1,5 @@
 """Tests for the Blog Post Job API."""
 
-import os
 import shutil
 import tempfile
 from datetime import datetime
@@ -14,9 +13,7 @@ from ai_blogger import (
     JobResult,
     JobService,
     JobStatus,
-    JobStatusResponse,
     JobStore,
-    JobSubmitResponse,
     MarkdownPreview,
     ScoringInfo,
 )

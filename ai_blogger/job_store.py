@@ -121,7 +121,7 @@ class JobStore:
                 existing_job_id = self._correlation_index.get(request.correlation_id)
                 if existing_job_id:
                     raise ValueError(
-                        f"Job with correlation_id " f"'{request.correlation_id}' already exists: " f"{existing_job_id}"
+                        f"Job with correlation_id '{request.correlation_id}' already exists: {existing_job_id}"
                     )
 
             job = Job(
@@ -199,9 +199,8 @@ class JobStore:
                 return None
 
             # Set started_at when transitioning from PENDING to an active status
-            if job.status == JobStatus.PENDING and status != JobStatus.PENDING:
-                if job.started_at is None:
-                    job.started_at = datetime.now()
+            if job.status == JobStatus.PENDING and status != JobStatus.PENDING and job.started_at is None:
+                job.started_at = datetime.now()
 
             job.status = status
             job.updated_at = datetime.now()

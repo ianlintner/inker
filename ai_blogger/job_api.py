@@ -7,7 +7,6 @@ integrated into web frameworks.
 
 import logging
 import uuid
-from datetime import datetime
 from typing import List, Optional
 
 from .chains import generate_candidates, refine_winner, score_candidates
@@ -71,7 +70,7 @@ class JobService:
         if request.correlation_id:
             existing = self.store.get_job_by_correlation_id(request.correlation_id)
             if existing:
-                logger.info(f"Returning existing job {existing.id} " f"for correlation_id {request.correlation_id}")
+                logger.info(f"Returning existing job {existing.id} for correlation_id {request.correlation_id}")
                 return JobSubmitResponse(
                     job_id=existing.id,
                     correlation_id=existing.correlation_id,
@@ -236,7 +235,7 @@ class JobService:
                 raise ValueError("No candidates were scored")
 
             winner = scored[0]
-            logger.info(f"Job {job_id}: Winner '{winner.candidate.title}' " f"with score {winner.score.total:.2f}")
+            logger.info(f"Job {job_id}: Winner '{winner.candidate.title}' with score {winner.score.total:.2f}")
 
             # Step 4: Refine winner
             self.store.update_job_status(job_id, JobStatus.REFINING)
