@@ -73,11 +73,10 @@ def github_models_llm():
 
     token = os.environ.get("GITHUB_TOKEN")
     # Use gpt-4o as it's widely available on GitHub Models
-    # GitHub Models uses Azure-based endpoint
     return ChatOpenAI(
         model="gpt-4o",
         api_key=token,
-        base_url="https://models.inference.ai.azure.com",
+        base_url="https://models.github.ai/inference",
         temperature=0.7,
     )
 
