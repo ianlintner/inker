@@ -185,6 +185,35 @@ topics → fetch_all_articles(sources=[...])
 - Requires `TAVILY_API_KEY` environment variable
 - Provides general web search results
 
+## Web UI
+
+AI Blogger includes a React-based web UI for job management and approval workflows.
+
+### Running the Web UI
+
+```bash
+# Install API dependencies
+pip install -e ".[api]"
+
+# Build the frontend
+cd frontend
+npm install
+npm run build
+cd ..
+
+# Run the server
+uvicorn ai_blogger.frontend_api:create_app --factory --host 0.0.0.0 --port 8000
+```
+
+Access the UI at `http://localhost:8000/`.
+
+### Features
+
+- **Job Submission**: Create blog post jobs with topic/source selection
+- **Job Monitoring**: Real-time status updates with progress indicators
+- **Post Review**: Preview generated content with scoring breakdown
+- **Approval Workflow**: Approve, reject, or request revisions with feedback
+
 ## Development
 
 ### Running Tests
