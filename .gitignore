@@ -33,3 +33,6 @@ build/
 
 # Documentation site
 site/
+
+# Database files
+*.db
