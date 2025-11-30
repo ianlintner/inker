@@ -152,23 +152,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
       - name: Validate catalog-info.yaml
-        run: |
-          python -c "
-          import yaml
-          import sys
-
-          with open('catalog-info.yaml', 'r') as f:
-              docs = list(yaml.safe_load_all(f))
-
-          required_fields = ['apiVersion', 'kind', 'metadata', 'spec']
-          for i, doc in enumerate(docs):
-              if doc is None:
-                  continue
-              for field in required_fields:
-                  if field not in doc:
-                      print(f'Error in document {i}: missing required field {field}')
-                      sys.exit(1)
-
-          print(f'✓ Validated {len([d for d in docs if d])} Backstage entities')
-          "
+        run: python scripts/validate_backstage.py catalog-info.yaml
