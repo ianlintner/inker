@@ -22,6 +22,24 @@ from ai_blogger.fetchers import get_fetcher
 pytestmark = pytest.mark.integration
 
 
+def emit_workflow_warning(message: str):
+    """Emit a GitHub Actions workflow warning annotation.
+
+    Args:
+        message: The warning message to display.
+    """
+    print(f"::warning::{message}")
+
+
+def emit_workflow_error(message: str):
+    """Emit a GitHub Actions workflow error annotation.
+
+    Args:
+        message: The error message to display.
+    """
+    print(f"::error::{message}")
+
+
 def get_tavily_api_key():
     """Get the Tavily API key from environment variables.
 
@@ -119,14 +137,23 @@ class TestTavilyIntegration:
     def fetcher(self, monkeypatch):
         """Get Tavily fetcher instance with API key set."""
         if not tavily_api_configured():
+            emit_workflow_warning("Tavily API key not configured - skipping Tavily integration tests")
             pytest.skip("Tavily API key not configured - skipping Tavily integration tests")
 
         ensure_tavily_api_key(monkeypatch)
         return get_fetcher("web")
 
+    def _fetch_with_error_handling(self, fetcher, topic, max_results):
+        """Fetch articles with proper error handling and workflow annotations."""
+        try:
+            return fetcher.fetch(topic, max_results=max_results)
+        except Exception as e:
+            emit_workflow_error(f"Tavily API error: {type(e).__name__}: {e}")
+            raise
+
     def test_can_fetch_articles_for_topic(self, fetcher):
         """Test that we can fetch articles from Tavily for a real topic."""
-        articles = fetcher.fetch("Python programming", max_results=5)
+        articles = self._fetch_with_error_handling(fetcher, "Python programming", max_results=5)
 
         assert articles is not None
         assert isinstance(articles, list)
@@ -135,7 +162,7 @@ class TestTavilyIntegration:
 
     def test_articles_have_required_fields(self, fetcher):
         """Test that fetched articles have all required fields."""
-        articles = fetcher.fetch("software development", max_results=3)
+        articles = self._fetch_with_error_handling(fetcher, "software development", max_results=3)
 
         assert len(articles) > 0
         for article in articles:
@@ -150,14 +177,16 @@ class TestTavilyIntegration:
     def test_respects_max_results_limit(self, fetcher):
         """Test that fetcher respects max_results parameter."""
         max_results = 3
-        articles = fetcher.fetch("AI", max_results=max_results)
+        articles = self._fetch_with_error_handling(fetcher, "AI", max_results=max_results)
 
         # Should return at most max_results
         assert len(articles) <= max_results
 
     def test_returns_software_engineering_relevant_results(self, fetcher):
         """Test that search results contain software engineering relevant terms."""
-        articles = fetcher.fetch("developer productivity", max_results=5)
+        articles = self._fetch_with_error_handling(fetcher, "developer productivity", max_results=5)
+
+        assert len(articles) > 0
 
         assert len(articles) > 0
         # At least some articles should have software/dev/engineering related content

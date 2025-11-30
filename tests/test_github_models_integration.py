@@ -65,6 +65,26 @@ def parse_json_response(content: str) -> dict:
         pytest.fail(f"Failed to parse JSON response: {e}. Response was: {extracted}")
 
 
+def emit_workflow_warning(message: str):
+    """Emit a GitHub Actions workflow warning annotation.
+
+    Args:
+        message: The warning message to display.
+    """
+    # GitHub Actions workflow command syntax for warnings
+    print(f"::warning::{message}")
+
+
+def emit_workflow_error(message: str):
+    """Emit a GitHub Actions workflow error annotation.
+
+    Args:
+        message: The error message to display.
+    """
+    # GitHub Actions workflow command syntax for errors
+    print(f"::error::{message}")
+
+
 def invoke_with_retry(llm, messages, max_retries=3, initial_delay=2):
     """Invoke LLM with retry logic for rate limit errors.
 
@@ -85,10 +105,21 @@ def invoke_with_retry(llm, messages, max_retries=3, initial_delay=2):
         try:
             return llm.invoke(messages)
         except RateLimitError:
-            if attempt == max_retries - 1:
-                pytest.skip("Rate limit exceeded after retries - skipping test")
-            time.sleep(delay)
-            delay *= 2  # Exponential backoff
+            if attempt < max_retries - 1:
+                emit_workflow_warning(
+                    f"GitHub Models rate limit hit (attempt {attempt + 1}/{max_retries}). " f"Retrying in {delay}s..."
+                )
+                time.sleep(delay)
+                delay *= 2  # Exponential backoff
+            else:
+                emit_workflow_error(
+                    f"GitHub Models rate limit exceeded after {max_retries} retries. "
+                    "Consider reducing test frequency or increasing retry delays."
+                )
+                pytest.skip(f"Rate limit exceeded after {max_retries} retries - skipping test")
+        except Exception as e:
+            emit_workflow_error(f"GitHub Models API error: {type(e).__name__}: {e}")
+            raise
     return None
 
 
