@@ -7,6 +7,7 @@ Run with:
     pytest tests/test_github_models_integration.py -v -m integration
 """
 
+import json
 import os
 import re
 
@@ -34,12 +35,32 @@ def extract_json_from_response(content: str) -> str:
     content = content.strip()
 
     # Handle markdown code blocks (```json ... ``` or ``` ... ```)
-    code_block_pattern = r"```(?:json)?\s*\n([\s\S]*?)\n```"
-    match = re.search(code_block_pattern, content)
+    # Use regex to robustly strip code block markers
+    code_block_pattern = r"^```(?:json)?\s*\n?([\s\S]*?)\n?```$"
+    match = re.match(code_block_pattern, content)
     if match:
         return match.group(1).strip()
 
     return content
+
+
+def parse_json_response(content: str) -> dict:
+    """Parse JSON from a response, with proper error handling.
+
+    Args:
+        content: The raw response content.
+
+    Returns:
+        Parsed JSON as a dictionary.
+
+    Raises:
+        pytest.fail: If JSON parsing fails, with context about the response.
+    """
+    extracted = extract_json_from_response(content)
+    try:
+        return json.loads(extracted)
+    except json.JSONDecodeError as e:
+        pytest.fail(f"Failed to parse JSON response: {e}. Response was: {extracted}")
 
 
 @pytest.fixture
@@ -52,35 +73,13 @@ def github_models_llm():
 
     token = os.environ.get("GITHUB_TOKEN")
     # Use gpt-4o as it's widely available on GitHub Models
+    # GitHub Models uses Azure-based endpoint
     return ChatOpenAI(
         model="gpt-4o",
         api_key=token,
-        base_url="https://models.github.ai/inference",
+        base_url="https://models.inference.ai.azure.com",
         temperature=0.7,
     )
-
-
-@pytest.fixture
-def sample_articles():
-    """Create sample articles for testing."""
-    from ai_blogger.models import Article
-
-    return [
-        Article(
-            title="Introduction to AI in Software Development",
-            url="https://example.com/ai-software",
-            source="web",
-            summary="An overview of how AI is changing software development practices.",
-            topic="AI software engineering",
-        ),
-        Article(
-            title="Building Better Code with Copilot",
-            url="https://example.com/copilot",
-            source="hacker_news",
-            summary="Tips for maximizing productivity with AI coding assistants.",
-            topic="developer productivity",
-        ),
-    ]
 
 
 class TestGitHubModelsConnection:
@@ -135,8 +134,6 @@ class TestBlogGeneration:
 
     def test_json_output_generation(self, github_models_llm):
         """Test that the model can generate structured JSON output."""
-        import json
-
         from langchain_core.messages import HumanMessage, SystemMessage
 
         messages = [
@@ -150,10 +147,11 @@ class TestBlogGeneration:
         response = github_models_llm.invoke(messages)
 
         assert response is not None
-        # Extract JSON and parse
-        content = extract_json_from_response(response.content)
-        parsed = json.loads(content)
-        assert "title" in parsed or "summary" in parsed
+        # Extract JSON and parse with error handling
+        parsed = parse_json_response(response.content)
+        assert (
+            "title" in parsed and "summary" in parsed
+        ), f"Expected both 'title' and 'summary' keys in response, got: {list(parsed.keys())}"
 
 
 class TestScoringCapability:
@@ -161,8 +159,6 @@ class TestScoringCapability:
 
     def test_can_score_content(self, github_models_llm):
         """Test that the model can score content on a scale."""
-        import json
-
         from langchain_core.messages import HumanMessage, SystemMessage
 
         messages = [
@@ -182,11 +178,12 @@ class TestScoringCapability:
         response = github_models_llm.invoke(messages)
 
         assert response is not None
-        # Extract JSON and parse
-        content = extract_json_from_response(response.content)
-        parsed = json.loads(content)
-        assert "score" in parsed
-        assert 1 <= parsed["score"] <= 10
+        # Extract JSON and parse with error handling
+        parsed = parse_json_response(response.content)
+        assert "score" in parsed, f"Expected 'score' key in response, got: {list(parsed.keys())}"
+        # Handle score as string or number
+        score = float(parsed["score"])
+        assert 1 <= score <= 10, f"Expected score between 1 and 10, got: {score}"
 
 
 class TestErrorHandling:
