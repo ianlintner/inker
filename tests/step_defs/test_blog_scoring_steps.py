@@ -173,12 +173,11 @@ def score_all_candidates(context, monkeypatch):
         )
         for i in range(len(context["candidates"]))
     ]
-    response_index = [0]
+    response_iter = iter(responses)
 
     def get_response(*args, **kwargs):
         mock_response = Mock()
-        mock_response.content = responses[response_index[0]]
-        response_index[0] += 1
+        mock_response.content = next(response_iter)
         return mock_response
 
     with patch("ai_blogger.chains.ChatOpenAI") as mock_llm_class:
