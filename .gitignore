@@ -33,3 +33,6 @@ build/
 
 # Documentation site
 site/
+
+# Data directory (SQLite databases)
+data/
