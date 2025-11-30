@@ -18,7 +18,8 @@ pytestmark = pytest.mark.integration
 
 def github_models_configured():
     """Check if GitHub Models is configured."""
-    return os.environ.get("GITHUB_TOKEN") is not None
+    token = os.environ.get("GITHUB_TOKEN")
+    return token is not None and token.strip() != ""
 
 
 def extract_json_from_response(content: str) -> str:
