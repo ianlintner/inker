@@ -115,12 +115,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-bdd
+          pip install pytest
 
       - name: Run integration tests with GitHub Models
         env:
           GITHUB_TOKEN: ${{ secrets.MODELS_PAT }}
-          OPENAI_API_KEY: ${{ secrets.MODELS_PAT }}
         run: |
           pytest tests/test_github_models_integration.py -v -m integration
 

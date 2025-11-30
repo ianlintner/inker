@@ -8,6 +8,7 @@ Run with:
 """
 
 import os
+import re
 
 import pytest
 
@@ -18,6 +19,26 @@ pytestmark = pytest.mark.integration
 def github_models_configured():
     """Check if GitHub Models is configured."""
     return os.environ.get("GITHUB_TOKEN") is not None
+
+
+def extract_json_from_response(content: str) -> str:
+    """Extract JSON content from a response, handling markdown code blocks.
+
+    Args:
+        content: The raw response content that may contain markdown code blocks.
+
+    Returns:
+        The extracted JSON string.
+    """
+    content = content.strip()
+
+    # Handle markdown code blocks (```json ... ``` or ``` ... ```)
+    code_block_pattern = r"```(?:json)?\s*\n([\s\S]*?)\n```"
+    match = re.search(code_block_pattern, content)
+    if match:
+        return match.group(1).strip()
+
+    return content
 
 
 @pytest.fixture
@@ -128,13 +149,8 @@ class TestBlogGeneration:
         response = github_models_llm.invoke(messages)
 
         assert response is not None
-        # Try to parse as JSON
-        content = response.content.strip()
-        # Handle markdown code blocks if present
-        if content.startswith("```"):
-            lines = content.split("\n")
-            content = "\n".join(lines[1:-1])
-
+        # Extract JSON and parse
+        content = extract_json_from_response(response.content)
         parsed = json.loads(content)
         assert "title" in parsed or "summary" in parsed
 
@@ -165,12 +181,8 @@ class TestScoringCapability:
         response = github_models_llm.invoke(messages)
 
         assert response is not None
-        content = response.content.strip()
-        # Handle markdown code blocks if present
-        if content.startswith("```"):
-            lines = content.split("\n")
-            content = "\n".join(lines[1:-1])
-
+        # Extract JSON and parse
+        content = extract_json_from_response(response.content)
         parsed = json.loads(content)
         assert "score" in parsed
         assert 1 <= parsed["score"] <= 10
