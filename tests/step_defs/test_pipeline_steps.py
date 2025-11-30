@@ -1,8 +1,6 @@
 """Step definitions for end-to-end pipeline BDD tests."""
 
 import json
-import os
-from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
@@ -96,12 +94,6 @@ AI tools are revolutionizing software development...
 ## Conclusion
 The future of development is AI-augmented.
 """
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps

@@ -7,7 +7,7 @@ import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
 from ai_blogger.chains import generate_candidates
-from ai_blogger.models import Article, CandidatePost
+from ai_blogger.models import Article
 
 scenarios("../features/blog_generation.feature")
 
@@ -146,12 +146,6 @@ def mock_articles():
             topic="developer productivity",
         ),
     ]
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps

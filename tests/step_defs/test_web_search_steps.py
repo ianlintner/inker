@@ -1,14 +1,12 @@
 """Step definitions for Web Search (Tavily) fetcher BDD tests."""
 
 import logging
-import os
 from unittest.mock import Mock, patch
 
 import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
-from ai_blogger.fetchers import WebSearchFetcher, get_fetcher
-from ai_blogger.models import Article
+from ai_blogger.fetchers import get_fetcher
 
 scenarios("../features/web_search_fetcher.feature")
 
@@ -60,12 +58,6 @@ def mock_tavily_success_response():
 def fetcher():
     """Get Web Search fetcher instance."""
     return get_fetcher("web")
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps

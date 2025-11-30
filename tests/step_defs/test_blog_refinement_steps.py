@@ -108,12 +108,6 @@ def mock_low_clarity_post():
     return ScoredPost(candidate=candidate, score=score)
 
 
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
-
-
 # Given steps
 @given("the LLM is configured for refinement")
 def llm_configured(monkeypatch):
@@ -257,10 +251,9 @@ def check_content_enhanced(context):
 @then("the refined content should have an H1 title header")
 def check_h1_header(context):
     """Check for H1 header in content."""
-    # Content includes frontmatter and body - should have # somewhere
+    # Check for H1 header at start, after frontmatter, or anywhere in body
     content = context["refined_content"]
-    # Either # is in the content or it's in frontmatter/body combined
-    assert "#" in content or "# " in content or len(content) > 100
+    assert content.startswith("# ") or "\n# " in content or ("---" in content and "# " in content.split("---", 2)[2])
 
 
 @then("the content should have proper Markdown formatting")

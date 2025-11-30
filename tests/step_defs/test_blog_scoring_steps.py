@@ -8,7 +8,7 @@ from pytest_bdd import given, parsers, scenarios, then, when
 
 from ai_blogger.chains import score_candidate, score_candidates
 from ai_blogger.config import SCORING_WEIGHTS
-from ai_blogger.models import CandidatePost, PostScore, ScoredPost
+from ai_blogger.models import CandidatePost, ScoredPost
 
 scenarios("../features/blog_scoring.feature")
 
@@ -45,12 +45,6 @@ refactoring suggestions. The future is collaborative—humans and AI working tog
         sources=["https://example.com/ai-engineering", "https://techblog.com/ai-tools"],
         topic="AI software engineering",
     )
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps
@@ -309,7 +303,8 @@ def check_zero_scores(context):
 @then("the reasoning should indicate an error")
 def check_error_reasoning(context):
     """Check that reasoning indicates error."""
-    assert "error" in context["scored_post"].score.reasoning.lower() or context["scored_post"].score.reasoning != ""
+    reasoning = context["scored_post"].score.reasoning.lower()
+    assert "error" in reasoning or "invalid" in reasoning or "failed" in reasoning
 
 
 @then("their scores should be within reasonable range of each other")

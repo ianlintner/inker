@@ -7,8 +7,7 @@ from unittest.mock import Mock, patch
 import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
-from ai_blogger.fetchers import YouTubeFetcher, get_fetcher
-from ai_blogger.models import Article
+from ai_blogger.fetchers import get_fetcher
 
 scenarios("../features/youtube_fetcher.feature")
 
@@ -121,12 +120,6 @@ def mock_youtube_old_videos_response():
 def fetcher():
     """Get YouTube fetcher instance."""
     return get_fetcher("youtube")
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps

@@ -6,8 +6,7 @@ from unittest.mock import Mock, patch
 import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 
-from ai_blogger.fetchers import HackerNewsFetcher, get_fetcher
-from ai_blogger.models import Article
+from ai_blogger.fetchers import get_fetcher
 
 scenarios("../features/hacker_news_fetcher.feature")
 
@@ -62,12 +61,6 @@ def mock_hn_empty_response():
 def fetcher():
     """Get Hacker News fetcher instance."""
     return get_fetcher("hacker_news")
-
-
-@pytest.fixture
-def context():
-    """Shared test context."""
-    return {}
 
 
 # Given steps
