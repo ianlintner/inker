@@ -29,6 +29,19 @@ from .job_models import (
 )
 from .job_store import JobStore
 from .models import Article, CandidatePost, PostScore, ScoredPost
+from .persistence import (
+    ApprovalStatus,
+    BlogPost,
+    BlogPostCreate,
+    BlogPostUpdate,
+    JobHistoryEntry,
+    JobStats,
+    SQLiteStorage,
+    StorageBackend,
+    StorageConfig,
+    create_storage,
+    get_storage_type,
+)
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
 
 __all__ = [
@@ -67,6 +80,18 @@ __all__ = [
     "JobStatusResponse",
     "MarkdownPreview",
     "ScoringInfo",
+    # Persistence Layer
+    "StorageBackend",
+    "StorageConfig",
+    "create_storage",
+    "get_storage_type",
+    "ApprovalStatus",
+    "BlogPost",
+    "BlogPostCreate",
+    "BlogPostUpdate",
+    "JobHistoryEntry",
+    "JobStats",
+    "SQLiteStorage",
     # Utils
     "generate_filename",
     "get_date_string",
