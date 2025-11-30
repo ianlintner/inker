@@ -53,6 +53,18 @@ from .persistence import (
     create_storage,
     get_storage_type,
 )
+from .queue import (
+    MemoryQueue,
+    QueueBackend,
+    QueueConfig,
+    QueueJob,
+    QueueJobCreate,
+    QueueJobStatus,
+    QueueJobUpdate,
+    QueueStats,
+    create_queue,
+    get_queue_type,
+)
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
 
 __all__ = [
@@ -103,6 +115,17 @@ __all__ = [
     "JobHistoryEntry",
     "JobStats",
     "SQLiteStorage",
+    # Queue Layer
+    "QueueBackend",
+    "QueueConfig",
+    "create_queue",
+    "get_queue_type",
+    "QueueJob",
+    "QueueJobCreate",
+    "QueueJobStatus",
+    "QueueJobUpdate",
+    "QueueStats",
+    "MemoryQueue",
     # Feedback API
     "FeedbackService",
     "ApprovalRequest",
