@@ -1,0 +1,97 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: inker
+  title: AI Blogger (Inker)
+  description: A LangChain-based automated daily AI blogger that discovers news, generates blog posts, scores them, and outputs refined Markdown content.
+  annotations:
+    github.com/project-slug: ianlintner/inker
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - python
+    - langchain
+    - ai
+    - automation
+    - blog
+  links:
+    - url: https://github.com/ianlintner/inker
+      title: GitHub Repository
+      icon: github
+    - url: https://ianlintner.github.io/inker
+      title: Documentation
+      icon: docs
+spec:
+  type: service
+  lifecycle: experimental
+  owner: user:ianlintner
+  system: ai-content-generation
+  providesApis: []
+  consumesApis:
+    - openai-api
+    - youtube-data-api
+    - tavily-api
+    - hacker-news-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: openai-api
+  title: OpenAI API
+  description: OpenAI GPT models for content generation
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:ianlintner
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: OpenAI API
+      version: "1.0"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: youtube-data-api
+  title: YouTube Data API v3
+  description: YouTube Data API for fetching trending videos
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:ianlintner
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: YouTube Data API v3
+      version: "3.0"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: tavily-api
+  title: Tavily Search API
+  description: Tavily API for web search functionality
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:ianlintner
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: Tavily Search API
+      version: "1.0"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: hacker-news-api
+  title: Hacker News Algolia API
+  description: Algolia API for searching Hacker News stories
+spec:
+  type: openapi
+  lifecycle: production
+  owner: user:ianlintner
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: Hacker News Algolia API
+      version: "1.0"

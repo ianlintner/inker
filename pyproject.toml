@@ -43,6 +43,12 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocs-mermaid2-plugin>=1.0.0",
+    "pymdown-extensions>=10.0.0",
+]
 
 [project.scripts]
 ai-blogger = "ai_blogger.__main__:main"
@@ -50,6 +56,7 @@ ai-blogger = "ai_blogger.__main__:main"
 [project.urls]
 Homepage = "https://github.com/ianlintner/inker"
 Repository = "https://github.com/ianlintner/inker"
+Documentation = "https://ianlintner.github.io/inker"
 
 [tool.setuptools.packages.find]
 include = ["ai_blogger*"]

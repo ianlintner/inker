@@ -145,3 +145,20 @@ jobs:
         run: |
           docker build -t ai-blogger:test .
           docker run --rm --entrypoint python ai-blogger:test -c 'from ai_blogger import *; print("Docker import successful")'
+
+  validate-backstage:
+    name: Validate Backstage Catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate catalog-info.yaml
+        run: python scripts/validate_backstage.py catalog-info.yaml
