@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-blogger"
+version = "0.1.0"
+description = "A LangChain-based automated daily AI blogger"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Ian Lintner"}
+]
+keywords = ["ai", "blogger", "langchain", "automation", "youtube", "hacker-news"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "langchain>=0.1.0",
+    "langchain-openai>=0.0.5",
+    "langchain-community>=0.0.16",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+    "python-slugify>=8.0.0",
+    "tavily-python>=0.3.0",
+    "google-api-python-client>=2.100.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "isort",
+    "flake8",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+]
+
+[project.scripts]
+ai-blogger = "ai_blogger.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/ianlintner/inker"
+Repository = "https://github.com/ianlintner/inker"
+
+[tool.setuptools.packages.find]
+include = ["ai_blogger*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | build
+    | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip = [".git", ".venv", "build", "dist"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
