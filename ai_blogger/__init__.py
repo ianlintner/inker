@@ -55,6 +55,24 @@ from .persistence import (
 )
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
 
+# Conditional import for Frontend API (requires fastapi)
+try:
+    from .frontend_api import (
+        configure_services,
+        create_app,
+        reset_services,
+        router,
+    )
+
+    _FRONTEND_API_AVAILABLE = True
+except ImportError:
+    # FastAPI not installed
+    configure_services = None  # type: ignore
+    create_app = None  # type: ignore
+    reset_services = None  # type: ignore
+    router = None  # type: ignore
+    _FRONTEND_API_AVAILABLE = False
+
 __all__ = [
     # Chains
     "generate_candidates",
@@ -113,6 +131,11 @@ __all__ = [
     "FeedbackEntry",
     "FeedbackStats",
     "FeedbackResponse",
+    # Frontend API (optional - requires fastapi)
+    "create_app",
+    "router",
+    "configure_services",
+    "reset_services",
     # Utils
     "generate_filename",
     "get_date_string",

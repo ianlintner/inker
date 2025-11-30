@@ -741,6 +741,323 @@ The feedback data can be used to:
 3. **Content style optimization**: Learn from feedback categories to improve content generation
 4. **Reviewer calibration**: Track reviewer patterns for consistency
 
+---
+
+## ai_blogger.frontend_api
+
+The Frontend API provides RESTful HTTP endpoints for frontend clients to interact with the AI Blogger system. Built on FastAPI, it offers a complete API for job management, content preview, and approval workflows.
+
+### Installation
+
+The Frontend API requires additional dependencies:
+
+```bash
+pip install ai-blogger[api]
+```
+
+This installs FastAPI and Uvicorn for running the API server.
+
+### Quick Start
+
+```python
+from ai_blogger import create_app
+import uvicorn
+
+# Create and run the API
+app = create_app()
+uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+Or use the router in an existing FastAPI app:
+
+```python
+from fastapi import FastAPI
+from ai_blogger import router
+
+app = FastAPI()
+app.include_router(router, prefix="/api")
+```
+
+### create_app()
+
+Factory function to create a configured FastAPI application.
+
+```python
+def create_app(
+    title: str = "AI Blogger Frontend API",
+    description: str = "RESTful API for AI Blogger job management and content workflow",
+    version: str = "1.0.0",
+    cors_origins: Optional[List[str]] = None,
+) -> FastAPI
+```
+
+**Args:**
+
+- `title` (str): API title for documentation.
+- `description` (str): API description.
+- `version` (str): API version.
+- `cors_origins` (Optional[List[str]]): CORS allowed origins. Defaults to `["*"]`.
+
+**Returns:** Configured FastAPI application.
+
+### router
+
+Pre-configured FastAPI APIRouter with all endpoints.
+
+```python
+from ai_blogger import router
+```
+
+### configure_services()
+
+Configure custom service instances for dependency injection.
+
+```python
+def configure_services(
+    job_service: Optional[JobService] = None,
+    feedback_service: Optional[FeedbackService] = None,
+    storage: Optional[StorageBackend] = None,
+) -> None
+```
+
+**Example:**
+
+```python
+from ai_blogger import configure_services, JobService, FeedbackService, create_storage
+
+# Custom configuration
+storage = create_storage("postgres", connection_string="postgresql://...")
+job_service = JobService("/custom/jobs/dir")
+feedback_service = FeedbackService(storage)
+
+configure_services(
+    job_service=job_service,
+    feedback_service=feedback_service,
+    storage=storage,
+)
+```
+
+### API Endpoints
+
+#### Health Check
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Check API and service health |
+
+**Response:**
+
+```json
+{
+  "status": "healthy",
+  "job_service": true,
+  "feedback_service": true,
+  "storage": true
+}
+```
+
+#### Job Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/jobs` | Submit a new job |
+| GET | `/api/jobs` | List all jobs |
+| GET | `/api/jobs/{job_id}` | Get job status |
+| GET | `/api/jobs/correlation/{correlation_id}` | Get job by correlation ID |
+| DELETE | `/api/jobs/{job_id}` | Delete a job |
+| POST | `/api/jobs/{job_id}/execute` | Execute a pending job |
+
+**Submit Job Request:**
+
+```json
+{
+  "topics": ["AI", "machine learning"],
+  "sources": ["hacker_news", "youtube"],
+  "num_candidates": 3,
+  "max_results": {"hacker_news": 10, "youtube": 5},
+  "correlation_id": "unique-request-id"
+}
+```
+
+**Submit Job Response:**
+
+```json
+{
+  "job_id": "550e8400-e29b-41d4-a716-446655440000",
+  "correlation_id": "unique-request-id",
+  "status": "pending",
+  "message": "Job submitted successfully",
+  "is_duplicate": false
+}
+```
+
+**Job Status Response:**
+
+```json
+{
+  "job_id": "550e8400-e29b-41d4-a716-446655440000",
+  "correlation_id": "unique-request-id",
+  "status": "completed",
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:35:00Z",
+  "started_at": "2024-01-15T10:30:05Z",
+  "completed_at": "2024-01-15T10:35:00Z",
+  "result": {
+    "markdown_preview": {...},
+    "scoring": {...},
+    "articles_fetched": 15,
+    "candidates_generated": 3
+  },
+  "error": null
+}
+```
+
+#### Markdown Preview
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/jobs/{job_id}/preview` | Get markdown preview for completed job |
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "preview": {
+    "title": "AI Trends in 2024",
+    "content": "# AI Trends in 2024\n\n...",
+    "word_count": 1500,
+    "topic": "AI software engineering",
+    "sources": ["https://example.com/article1"]
+  },
+  "message": "Preview available"
+}
+```
+
+#### Approval Workflow
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/posts/{post_id}/approve` | Approve a blog post |
+| POST | `/api/posts/{post_id}/reject` | Reject a blog post |
+| POST | `/api/posts/{post_id}/revision` | Request revision |
+| GET | `/api/posts/{post_id}/feedback` | Get post feedback history |
+
+**Approve Request:**
+
+```json
+{
+  "feedback": "Excellent content!",
+  "ratings": [
+    {"category": "quality", "score": 5, "comment": "Great writing"}
+  ],
+  "actor": "reviewer-1"
+}
+```
+
+**Reject Request:**
+
+```json
+{
+  "feedback": "Needs more research",
+  "categories": ["accuracy", "sources"],
+  "ratings": [
+    {"category": "accuracy", "score": 2}
+  ],
+  "actor": "reviewer-1"
+}
+```
+
+**Feedback Response:**
+
+```json
+{
+  "success": true,
+  "post_id": "post-123",
+  "new_status": "approved",
+  "feedback_id": "feedback-456",
+  "message": "Post approved successfully"
+}
+```
+
+#### Feedback Statistics
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/feedback/stats` | Get aggregated feedback statistics |
+| GET | `/api/feedback/learning` | Get learning data for ML training |
+
+**Stats Response:**
+
+```json
+{
+  "total_feedback": 100,
+  "approvals": 70,
+  "rejections": 20,
+  "revisions": 10,
+  "approval_rate": 70.0,
+  "feedback_by_topic": {
+    "AI software engineering": {
+      "total": 30,
+      "approved": 25,
+      "approval_rate": 83.33
+    }
+  }
+}
+```
+
+### Error Handling
+
+All endpoints return appropriate HTTP status codes:
+
+| Code | Description |
+|------|-------------|
+| 200 | Success |
+| 201 | Created (for POST /api/jobs) |
+| 204 | No Content (for DELETE) |
+| 400 | Bad Request (validation errors) |
+| 404 | Not Found (resource doesn't exist) |
+| 500 | Internal Server Error |
+
+Error responses include a `detail` field:
+
+```json
+{
+  "detail": "Job abc123 not found"
+}
+```
+
+### CORS Configuration
+
+By default, CORS is enabled for all origins. Customize in production:
+
+```python
+app = create_app(cors_origins=["https://myapp.example.com"])
+```
+
+### Running the Server
+
+```bash
+# Development
+uvicorn ai_blogger.frontend_api:create_app --factory --reload
+
+# Production
+uvicorn ai_blogger.frontend_api:create_app --factory --host 0.0.0.0 --port 8000
+```
+
+Or with the module directly:
+
+```bash
+python -m ai_blogger.frontend_api
+```
+
+### Interactive Documentation
+
+When running, access:
+
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
 ## See Also
 
 - [Architecture](architecture.md) - System design overview
