@@ -1,16 +1,11 @@
 """Tests for the job queue layer."""
 
-import shutil
-import tempfile
-import time
 from datetime import datetime, timedelta
 
 import pytest
 
 from ai_blogger.queue import (
     MemoryQueue,
-    QueueBackend,
-    QueueConfig,
     QueueJob,
     QueueJobCreate,
     QueueJobStatus,
@@ -19,7 +14,7 @@ from ai_blogger.queue import (
     create_queue,
     get_queue_type,
 )
-from ai_blogger.queue.models import FailedJobInfo, RetryPolicy
+from ai_blogger.queue.models import RetryPolicy
 
 
 @pytest.fixture
@@ -448,10 +443,7 @@ class TestMemoryQueue:
 
     def test_enqueue_batch(self, memory_queue):
         """Test batch enqueue."""
-        jobs = [
-            QueueJobCreate(job_type="batch", payload={"index": i})
-            for i in range(5)
-        ]
+        jobs = [QueueJobCreate(job_type="batch", payload={"index": i}) for i in range(5)]
         created = memory_queue.enqueue_batch(jobs)
 
         assert len(created) == 5
@@ -511,8 +503,8 @@ class TestMemoryQueue:
         """Test getting queue statistics."""
         # Create jobs in different states
         job1 = memory_queue.enqueue(QueueJobCreate(job_type="test"))
-        job2 = memory_queue.enqueue(QueueJobCreate(job_type="test"))
-        job3 = memory_queue.enqueue(QueueJobCreate(job_type="test"))
+        memory_queue.enqueue(QueueJobCreate(job_type="test"))
+        memory_queue.enqueue(QueueJobCreate(job_type="test"))
 
         # Complete one
         memory_queue.dequeue()

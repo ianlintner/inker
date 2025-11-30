@@ -159,12 +159,13 @@ class RetryPolicy(BaseModel):
         else:
             delay = self.base_delay_seconds
 
-        delay = min(delay, self.max_delay_seconds)
-
         if self.jitter:
             # Add up to 25% jitter
             jitter_amount = delay * 0.25 * random.random()
             delay += jitter_amount
+
+        # Clamp to max_delay_seconds after applying jitter
+        delay = min(delay, self.max_delay_seconds)
 
         return delay
 

@@ -150,9 +150,9 @@ class RedisQueue(QueueBackend):
         For same priority, earlier created = lower score (FIFO).
         """
         # Priority is negated so higher priority = lower score
-        # Timestamp is added as fraction to break ties
+        # Timestamp is added to break ties (smaller multiplier for better precision)
         timestamp = created_at.timestamp()
-        return (-priority * 1e10) + timestamp
+        return (-priority * 1e6) + timestamp
 
     # === Enqueue Operations ===
 
@@ -206,6 +206,16 @@ class RedisQueue(QueueBackend):
         client = self._get_client()
         result = []
         now = datetime.now()
+
+        # Check for duplicate correlation IDs before enqueueing
+        for job_create in jobs:
+            if job_create.correlation_id:
+                existing = client.get(f"{self._correlation_key}:{job_create.correlation_id}")
+                if existing:
+                    raise ValueError(
+                        f"Job with correlation_id '{job_create.correlation_id}' already exists: {existing}"
+                    )
+
         pipe = client.pipeline()
 
         for job_create in jobs:
@@ -247,7 +257,12 @@ class RedisQueue(QueueBackend):
         job_types: Optional[List[str]] = None,
         worker_id: Optional[str] = None,
     ) -> Optional[QueueJob]:
-        """Dequeue and lock the next available job."""
+        """Dequeue and lock the next available job.
+
+        Note: The current implementation uses a pipeline for moving jobs from pending
+        to processing. For higher concurrency requirements, consider using Lua scripting
+        or WATCH/MULTI/EXEC transactions for truly atomic operations.
+        """
         client = self._get_client()
         now = datetime.now()
 
@@ -490,7 +505,12 @@ class RedisQueue(QueueBackend):
         limit: int = 100,
         offset: int = 0,
     ) -> List[QueueJob]:
-        """List jobs with optional filters."""
+        """List jobs with optional filters.
+
+        Note: This method uses SCAN to iterate over all keys which has O(N) complexity.
+        For production systems with many jobs, consider maintaining separate sorted sets
+        for different job statuses to enable more efficient filtering.
+        """
         client = self._get_client()
 
         # Get all job IDs from both queues
@@ -599,7 +619,12 @@ class RedisQueue(QueueBackend):
     # === Statistics ===
 
     def get_stats(self) -> QueueStats:
-        """Get queue statistics."""
+        """Get queue statistics.
+
+        Note: This method uses SCAN to iterate over all keys which has O(N) complexity.
+        For production systems, consider maintaining real-time counters using Redis
+        INCR/DECR or separate sorted sets for different statuses.
+        """
         client = self._get_client()
 
         pending_count = client.zcard(self._pending_key)
