@@ -119,7 +119,7 @@ jobs:
 
       - name: Run integration tests with GitHub Models
         env:
-          GITHUB_TOKEN: ${{ secrets.MODELS_PAT }}
+          GITHUB_TOKEN: ${{ secrets.MODEL_PAT }}
         run: |
           pytest tests/test_github_models_integration.py -v -m integration
 
