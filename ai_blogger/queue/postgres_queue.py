@@ -602,7 +602,8 @@ class PostgresQueue(QueueBackend):
     def update_job(self, job_id: str, update: QueueJobUpdate) -> Optional[QueueJob]:
         """Update a job's fields."""
         now = datetime.now()
-        # Column names are hard-coded below - NOT derived from user input
+        # SECURITY: Column names below are hard-coded string literals - NOT derived from user input.
+        # Only values are parameterized. This is safe from SQL injection.
         updates: List[str] = []
         params: List[Any] = []
 

@@ -126,7 +126,7 @@ def create_queue(
             from .postgres_queue import PostgresQueue
         except ImportError as e:
             raise ImportError(
-                "psycopg2 is required for PostgreSQL queue. " "Install with: pip install psycopg2-binary"
+                "psycopg2 is required for PostgreSQL queue. Install with: pip install psycopg2-binary"
             ) from e
 
         logger.info("Creating PostgreSQL queue")
@@ -138,7 +138,7 @@ def create_queue(
         try:
             from .redis_queue import RedisQueue
         except ImportError as e:
-            raise ImportError("redis is required for Redis queue. " "Install with: pip install redis") from e
+            raise ImportError("redis is required for Redis queue. Install with: pip install redis") from e
 
         logger.info("Creating Redis queue")
         queue = RedisQueue(config)
