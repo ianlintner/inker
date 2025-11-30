@@ -6,7 +6,7 @@ Suitable for development, testing, and single-instance deployments.
 
 import logging
 import threading
-from queue import Empty, Queue
+from collections import deque
 from typing import Callable, Optional
 from uuid import UUID
 
@@ -24,15 +24,18 @@ class InMemoryJobQueue(JobQueue):
 
     def __init__(self):
         """Initialize the in-memory queue."""
-        self._queue: Queue = Queue()
+        self._queue: deque = deque()
         self._worker_thread: Optional[threading.Thread] = None
         self._running = False
         self._lock = threading.Lock()
+        self._condition = threading.Condition(self._lock)
 
     def enqueue(self, job_id: UUID) -> bool:
         """Add a job ID to the queue for processing."""
         try:
-            self._queue.put(job_id)
+            with self._lock:
+                self._queue.append(job_id)
+                self._condition.notify()
             logger.debug(f"Enqueued job {job_id}")
             return True
         except Exception as e:
@@ -41,44 +44,32 @@ class InMemoryJobQueue(JobQueue):
 
     def dequeue(self) -> Optional[UUID]:
         """Remove and return the next job ID from the queue."""
-        try:
-            return self._queue.get_nowait()
-        except Empty:
+        with self._lock:
+            if self._queue:
+                return self._queue.popleft()
             return None
 
     def peek(self) -> Optional[UUID]:
         """View the next job ID without removing it."""
         with self._lock:
-            if self._queue.empty():
-                return None
-            # Queue doesn't support peek, so we dequeue and re-enqueue
-            # This is not ideal for production but works for testing
-            try:
-                job_id = self._queue.get_nowait()
-                # Put it back at the front by using a temporary queue
-                # For simplicity, just return the job_id and put it back
-                # Note: This changes order - in production, use a proper peek
-                self._queue.put(job_id)
-                return job_id
-            except Empty:
-                return None
+            if self._queue:
+                return self._queue[0]
+            return None
 
     def size(self) -> int:
         """Get the number of jobs in the queue."""
-        return self._queue.qsize()
+        with self._lock:
+            return len(self._queue)
 
     def is_empty(self) -> bool:
         """Check if the queue is empty."""
-        return self._queue.empty()
+        with self._lock:
+            return len(self._queue) == 0
 
     def clear(self) -> None:
         """Clear all jobs from the queue."""
         with self._lock:
-            while not self._queue.empty():
-                try:
-                    self._queue.get_nowait()
-                except Empty:
-                    break
+            self._queue.clear()
 
     def start_worker(self, handler: Callable[[UUID], None]) -> None:
         """Start a worker to process jobs from the queue."""
@@ -95,17 +86,20 @@ class InMemoryJobQueue(JobQueue):
     def _worker_loop(self, handler: Callable[[UUID], None]) -> None:
         """Internal worker loop that processes jobs."""
         while self._running:
-            try:
-                job_id = self._queue.get(timeout=1.0)
+            job_id = None
+            with self._condition:
+                # Wait for items or timeout
+                while not self._queue and self._running:
+                    self._condition.wait(timeout=1.0)
+                if self._queue:
+                    job_id = self._queue.popleft()
+
+            if job_id:
                 try:
                     logger.debug(f"Processing job {job_id}")
                     handler(job_id)
                 except Exception as e:
                     logger.error(f"Error processing job {job_id}: {e}")
-                finally:
-                    self._queue.task_done()
-            except Empty:
-                continue
 
     def stop_worker(self) -> None:
         """Stop the worker processing jobs."""
@@ -114,10 +108,12 @@ class InMemoryJobQueue(JobQueue):
                 return
 
             self._running = False
-            if self._worker_thread:
-                self._worker_thread.join(timeout=5.0)
-                self._worker_thread = None
-            logger.info("Job queue worker stopped")
+            self._condition.notify_all()
+
+        if self._worker_thread:
+            self._worker_thread.join(timeout=5.0)
+            self._worker_thread = None
+        logger.info("Job queue worker stopped")
 
     def is_worker_running(self) -> bool:
         """Check if the worker is currently running."""

@@ -25,7 +25,10 @@ class TestSQLiteJobRepository:
         fd, path = tempfile.mkstemp(suffix=".db")
         os.close(fd)
         yield path
-        os.unlink(path)
+        try:
+            os.unlink(path)
+        except Exception:
+            pass
 
     @pytest.fixture
     def repository(self, temp_db):
