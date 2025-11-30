@@ -1,0 +1,481 @@
+.container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.placeholder {
+  padding: 60px 20px;
+  text-align: center;
+  color: #888;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.statusBadge.pending {
+  background: #6b7280;
+}
+
+.statusBadge.fetching {
+  background: #3b82f6;
+}
+
+.statusBadge.generating {
+  background: #8b5cf6;
+}
+
+.statusBadge.scoring {
+  background: #f59e0b;
+}
+
+.statusBadge.refining {
+  background: #10b981;
+}
+
+.statusBadge.completed {
+  background: #059669;
+}
+
+.statusBadge.failed {
+  background: #ef4444;
+}
+
+.infoSection {
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.infoRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.infoRow:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  color: #666;
+  min-width: 120px;
+}
+
+.code {
+  font-family: monospace;
+  background: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.processingSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #eff6ff;
+  color: #3b82f6;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #93c5fd;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorSection {
+  padding: 16px 20px;
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+}
+
+.errorSection h3 {
+  margin: 0 0 8px 0;
+  color: #ef4444;
+  font-size: 16px;
+}
+
+.errorSection p {
+  margin: 0;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.errorDetails {
+  margin-top: 8px !important;
+  color: #991b1b !important;
+  font-size: 13px !important;
+}
+
+.actionsSection {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.executeButton {
+  flex: 1;
+  padding: 12px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.executeButton:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.executeButton:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  padding: 12px 20px;
+  background: #f5f5f5;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loadingPreview {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.noPreview {
+  padding: 40px 20px;
+  text-align: center;
+  color: #888;
+}
+
+.previewSection {
+  padding: 20px;
+}
+
+.previewTitle {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.previewMeta {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.scoringSection {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.scoringSection h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.scoreGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scoreLabel {
+  min-width: 90px;
+  font-size: 13px;
+  color: #555;
+}
+
+.scoreBarContainer {
+  flex: 1;
+  height: 8px;
+  background: #e5e5e5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.scoreValue {
+  min-width: 40px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.totalScore {
+  margin-top: 12px;
+  text-align: right;
+  font-size: 16px;
+  color: #333;
+}
+
+.totalScore strong {
+  color: #3b82f6;
+  font-size: 18px;
+}
+
+.contentPreview {
+  margin-bottom: 24px;
+}
+
+.contentPreview h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.markdown {
+  max-height: 400px;
+  overflow: auto;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.approvalSection {
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.approvalSection h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.feedbackForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feedbackLabel {
+  display: block;
+  font-size: 14px;
+  color: #555;
+}
+
+.feedbackTextarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.feedbackTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.categoriesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.categoriesLabel {
+  font-size: 14px;
+  color: #555;
+}
+
+.categoriesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoryLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.categoryLabel:hover {
+  border-color: #3b82f6;
+}
+
+.categoryLabel input {
+  cursor: pointer;
+}
+
+.approvalButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.approveButton {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.approveButton:hover:not(:disabled) {
+  background: #047857;
+}
+
+.approveButton:disabled {
+  background: #6ee7b7;
+  cursor: not-allowed;
+}
+
+.revisionButton {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.revisionButton:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.revisionButton:disabled {
+  background: #fcd34d;
+  cursor: not-allowed;
+}
+
+.rejectButton {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.rejectButton:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.rejectButton:disabled {
+  background: #fca5a5;
+  cursor: not-allowed;
+}
+
+.actionResult {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.actionResult.success {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.actionResult.error {
+  background: #fef2f2;
+  color: #ef4444;
+}
