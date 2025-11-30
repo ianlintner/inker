@@ -32,6 +32,10 @@ dependencies = [
     "python-slugify>=8.0.0",
     "tavily-python>=0.3.0",
     "google-api-python-client>=2.100.0",
+    # Phase 2: API and workflow dependencies
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    "starlette>=0.35.0",
 ]
 
 [project.optional-dependencies]
@@ -42,6 +46,7 @@ dev = [
     "mypy",
     "pytest",
     "pytest-cov",
+    "httpx",
 ]
 docs = [
     "mkdocs>=1.5.0",

@@ -15,6 +15,19 @@ from .fetchers import (
     get_fetcher,
     register_fetcher,
 )
+from .job_models import (
+    ApprovalRecord,
+    ApprovalRequest,
+    ApprovalStatus,
+    BlogPostJob,
+    EditorComment,
+    HistoricalJobsResponse,
+    JobPreview,
+    JobResponse,
+    JobStats,
+    JobStatus,
+    JobSubmission,
+)
 from .models import Article, CandidatePost, PostScore, ScoredPost
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
 
@@ -42,6 +55,18 @@ __all__ = [
     "CandidatePost",
     "PostScore",
     "ScoredPost",
+    # Job models (Phase 2)
+    "BlogPostJob",
+    "JobStatus",
+    "ApprovalStatus",
+    "JobSubmission",
+    "JobResponse",
+    "JobPreview",
+    "ApprovalRequest",
+    "ApprovalRecord",
+    "EditorComment",
+    "JobStats",
+    "HistoricalJobsResponse",
     # Utils
     "generate_filename",
     "get_date_string",
