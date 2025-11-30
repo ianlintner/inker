@@ -512,6 +512,19 @@ from ai_blogger import (
     PostScore,
     ScoredPost,
     
+    # Job Models (Phase 2)
+    BlogPostJob,
+    JobStatus,
+    ApprovalStatus,
+    JobSubmission,
+    JobResponse,
+    JobPreview,
+    ApprovalRequest,
+    ApprovalRecord,
+    EditorComment,
+    JobStats,
+    HistoricalJobsResponse,
+    
     # Fetchers
     BaseFetcher,
     register_fetcher,
@@ -526,6 +539,145 @@ from ai_blogger import (
     generate_filename,
 )
 ```
+
+---
+
+## ai_blogger.job_models (Phase 2)
+
+Data models for the job management and approval workflow.
+
+### JobStatus
+
+Status of a blog post generation job.
+
+```python
+class JobStatus(str, Enum):
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    NEEDS_APPROVAL = "needs_approval"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    FAILED = "failed"
+```
+
+### ApprovalStatus
+
+Status of editorial approval.
+
+```python
+class ApprovalStatus(str, Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+```
+
+### BlogPostJob
+
+A job for generating a blog post.
+
+```python
+class BlogPostJob(BaseModel):
+    id: UUID
+    correlation_id: Optional[str]
+    status: JobStatus
+    topics: List[str]
+    sources: List[str]
+    num_candidates: int
+    created_at: datetime
+    updated_at: datetime
+    started_at: Optional[datetime]
+    completed_at: Optional[datetime]
+    error_message: Optional[str]
+    title: Optional[str]
+    content: Optional[str]
+    score: Optional[float]
+    sources_used: List[str]
+    approval_status: ApprovalStatus
+    approval_records: List[ApprovalRecord]
+```
+
+### JobSubmission
+
+Request model for submitting a new blog post job.
+
+```python
+class JobSubmission(BaseModel):
+    topics: Optional[List[str]]
+    sources: Optional[List[str]]
+    num_candidates: int = 3
+    correlation_id: Optional[str]
+```
+
+### ApprovalRequest
+
+Request model for approving or rejecting a blog post.
+
+```python
+class ApprovalRequest(BaseModel):
+    status: ApprovalStatus
+    reviewer: str
+    reason: Optional[str]
+    comments: Optional[List[str]]
+```
+
+### EditorComment
+
+An editor comment on a blog post.
+
+```python
+class EditorComment(BaseModel):
+    id: UUID
+    job_id: UUID
+    author: str
+    content: str
+    created_at: datetime
+```
+
+---
+
+## ai_blogger.api (Phase 2)
+
+RESTful API for job management and approval workflow.
+
+### Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/jobs` | Submit a new blog post job |
+| GET | `/api/v1/jobs/{job_id}` | Get job status |
+| GET | `/api/v1/jobs/{job_id}/preview` | Preview generated content |
+| POST | `/api/v1/jobs/{job_id}/approve` | Approve or reject a blog post |
+| GET | `/api/v1/jobs/{job_id}/comments` | Get job comments |
+| POST | `/api/v1/jobs/{job_id}/comments` | Add a comment |
+| GET | `/api/v1/jobs` | List jobs with filtering |
+| GET | `/api/v1/stats` | Get job statistics |
+| GET | `/api/v1/health` | Health check |
+| GET | `/api/v1/ready` | Readiness check |
+| GET | `/metrics` | Prometheus metrics |
+
+### Running the API Server
+
+```bash
+# Basic usage
+python -m ai_blogger.server
+
+# Custom host and port
+python -m ai_blogger.server --host 0.0.0.0 --port 8080
+
+# Development mode with auto-reload
+python -m ai_blogger.server --reload
+
+# Using uvicorn directly
+uvicorn ai_blogger.api.app:create_app --factory --host 0.0.0.0 --port 8000
+```
+
+### OpenAPI Documentation
+
+When the server is running, interactive API documentation is available at:
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+- OpenAPI JSON: `http://localhost:8000/openapi.json`
 
 ## See Also
 
