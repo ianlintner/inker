@@ -301,7 +301,12 @@ async def submit_job(
     Returns:
         Job submission response with job details.
     """
-    logger.info(f"Submitting job: {request.model_dump()}")
+    # Log only non-sensitive metadata
+    logger.info(
+        f"Submitting job: num_candidates={request.num_candidates}, "
+        f"correlation_id={request.correlation_id}, "
+        f"sources={request.sources}"
+    )
 
     job_request = JobRequest(
         topics=request.topics,
@@ -629,10 +634,16 @@ def create_app(
         title: API title.
         description: API description.
         version: API version.
-        cors_origins: List of allowed CORS origins. Defaults to ["*"].
+        cors_origins: List of allowed CORS origins. Defaults to ["*"] for
+            development convenience. For production, specify explicit origins
+            like ["https://myapp.example.com"].
 
     Returns:
         Configured FastAPI application.
+
+    Warning:
+        The default CORS configuration allows all origins, which is suitable
+        for development but should be restricted in production environments.
     """
     app = FastAPI(
         title=title,
@@ -642,9 +653,11 @@ def create_app(
         redoc_url="/redoc",
     )
 
-    # Configure CORS
+    # Configure CORS - defaults to permissive for development
+    # Production deployments should specify explicit origins
     if cors_origins is None:
         cors_origins = ["*"]
+        logger.warning("CORS configured with wildcard origin '*'. " "For production, specify explicit cors_origins.")
 
     app.add_middleware(
         CORSMiddleware,
