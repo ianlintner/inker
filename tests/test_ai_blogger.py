@@ -6,12 +6,12 @@ import pytest
 def test_imports():
     """Test that all modules can be imported."""
     from ai_blogger import (
+        TOPICS,
         Article,
         BaseFetcher,
         CandidatePost,
         PostScore,
         ScoredPost,
-        TOPICS,
         fetch_all_articles,
         generate_filename,
         get_available_sources,
@@ -21,6 +21,7 @@ def test_imports():
         register_fetcher,
         slugify,
     )
+
     assert True
 
 
@@ -77,8 +78,9 @@ def test_generate_filename():
 
 def test_get_date_string():
     """Test date string format."""
-    from ai_blogger import get_date_string
     import re
+
+    from ai_blogger import get_date_string
 
     date_str = get_date_string()
     # Should match YYYY-MM-DD format
