@@ -22,14 +22,32 @@ from ai_blogger.fetchers import get_fetcher
 pytestmark = pytest.mark.integration
 
 
-def tavily_api_configured():
-    """Check if Tavily API is configured.
+def get_tavily_api_key():
+    """Get the Tavily API key from environment variables.
 
     Checks for both TAVILY_API_KEY (used by the fetcher) and TAVILY_KEY
     (alternative name that may be used in CI).
+
+    Returns:
+        The API key if configured, None otherwise.
     """
-    api_key = os.environ.get("TAVILY_API_KEY") or os.environ.get("TAVILY_KEY")
+    return os.environ.get("TAVILY_API_KEY") or os.environ.get("TAVILY_KEY")
+
+
+def tavily_api_configured():
+    """Check if Tavily API is configured."""
+    api_key = get_tavily_api_key()
     return api_key is not None and api_key.strip() != ""
+
+
+def ensure_tavily_api_key(monkeypatch):
+    """Ensure TAVILY_API_KEY is set for the fetcher.
+
+    Maps TAVILY_KEY to TAVILY_API_KEY if only the former is set.
+    """
+    api_key = get_tavily_api_key()
+    if api_key and not os.environ.get("TAVILY_API_KEY"):
+        monkeypatch.setenv("TAVILY_API_KEY", api_key)
 
 
 class TestHackerNewsIntegration:
@@ -103,12 +121,7 @@ class TestTavilyIntegration:
         if not tavily_api_configured():
             pytest.skip("Tavily API key not configured - skipping Tavily integration tests")
 
-        # Support both TAVILY_API_KEY and TAVILY_KEY env var names
-        api_key = os.environ.get("TAVILY_API_KEY") or os.environ.get("TAVILY_KEY")
-        if api_key and not os.environ.get("TAVILY_API_KEY"):
-            # If only TAVILY_KEY is set, also set TAVILY_API_KEY for the fetcher
-            monkeypatch.setenv("TAVILY_API_KEY", api_key)
-
+        ensure_tavily_api_key(monkeypatch)
         return get_fetcher("web")
 
     def test_can_fetch_articles_for_topic(self, fetcher):
@@ -142,8 +155,8 @@ class TestTavilyIntegration:
         # Should return at most max_results
         assert len(articles) <= max_results
 
-    def test_search_appends_software_engineering_context(self, fetcher):
-        """Test that search results are relevant to software engineering context."""
+    def test_returns_software_engineering_relevant_results(self, fetcher):
+        """Test that search results contain software engineering relevant terms."""
         articles = fetcher.fetch("developer productivity", max_results=5)
 
         assert len(articles) > 0
@@ -151,8 +164,7 @@ class TestTavilyIntegration:
         all_text = " ".join((article.title + " " + article.summary).lower() for article in articles)
         relevant_terms = ["software", "developer", "development", "engineering", "code", "programming", "tech"]
         has_relevant_content = any(term in all_text for term in relevant_terms)
-        # This is a soft check - we just want to verify context is added
-        assert has_relevant_content or len(articles) > 0
+        assert has_relevant_content
 
     def test_fetcher_availability_with_key(self, fetcher):
         """Test that Tavily fetcher reports as available when key is set."""
@@ -194,9 +206,7 @@ class TestCombinedFetching:
         assert all(a.source == "hacker_news" for a in hn_articles)
 
         if tavily_api_configured():
-            api_key = os.environ.get("TAVILY_API_KEY") or os.environ.get("TAVILY_KEY")
-            if api_key and not os.environ.get("TAVILY_API_KEY"):
-                monkeypatch.setenv("TAVILY_API_KEY", api_key)
+            ensure_tavily_api_key(monkeypatch)
 
             web_fetcher = get_fetcher("web")
             web_articles = web_fetcher.fetch("Python", max_results=2)

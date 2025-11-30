@@ -151,7 +151,7 @@ jobs:
         env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_KEY }}
         run: |
-          pytest tests/test_fetchers_integration.py -v -m integration -k "Tavily"
+          pytest tests/test_fetchers_integration.py -v -m integration -k "TavilyIntegration"
 
   build:
     name: Build Package

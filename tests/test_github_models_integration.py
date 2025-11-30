@@ -88,7 +88,7 @@ class TestGitHubModelsConnection:
         """Test that we can connect to GitHub Models and get a response."""
         from langchain_core.messages import HumanMessage
 
-        messages = [HumanMessage(content="Say 'Hello, GitHub Models!' in exactly those words.")]
+        messages = [HumanMessage(content="What is 1 + 1? Please respond with just the number.")]
         response = github_models_llm.invoke(messages)
 
         assert response is not None
