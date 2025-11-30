@@ -145,3 +145,30 @@ jobs:
         run: |
           docker build -t ai-blogger:test .
           docker run --rm --entrypoint python ai-blogger:test -c 'from ai_blogger import *; print("Docker import successful")'
+
+  validate-backstage:
+    name: Validate Backstage Catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate catalog-info.yaml
+        run: |
+          python -c "
+          import yaml
+          import sys
+
+          with open('catalog-info.yaml', 'r') as f:
+              docs = list(yaml.safe_load_all(f))
+
+          required_fields = ['apiVersion', 'kind', 'metadata', 'spec']
+          for i, doc in enumerate(docs):
+              if doc is None:
+                  continue
+              for field in required_fields:
+                  if field not in doc:
+                      print(f'Error in document {i}: missing required field {field}')
+                      sys.exit(1)
+
+          print(f'✓ Validated {len([d for d in docs if d])} Backstage entities')
+          "

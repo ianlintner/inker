@@ -30,3 +30,6 @@ posts/
 *.egg-info/
 dist/
 build/
+
+# Documentation site
+site/
