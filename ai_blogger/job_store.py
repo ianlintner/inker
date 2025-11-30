@@ -198,11 +198,13 @@ class JobStore:
             if not job:
                 return None
 
+            # Set started_at when transitioning from PENDING to an active status
+            if job.status == JobStatus.PENDING and status != JobStatus.PENDING:
+                if job.started_at is None:
+                    job.started_at = datetime.now()
+
             job.status = status
             job.updated_at = datetime.now()
-
-            if status == JobStatus.PENDING and job.started_at is None:
-                job.started_at = datetime.now()
 
             if status in (JobStatus.COMPLETED, JobStatus.FAILED):
                 job.completed_at = datetime.now()

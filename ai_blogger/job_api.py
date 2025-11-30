@@ -192,11 +192,8 @@ class JobService:
             logger.warning(f"Job {job_id} is not pending (status: {job.status})")
             return job
 
-        # Mark job as started
-        job.started_at = datetime.now()
-
         try:
-            # Step 1: Fetch articles
+            # Step 1: Fetch articles (started_at is set by update_job_status)
             self.store.update_job_status(job_id, JobStatus.FETCHING)
             logger.info(f"Job {job_id}: Fetching articles...")
 

@@ -223,9 +223,11 @@ class TestJobStore:
         request = JobRequest()
         job_store.create_job("test-123", request)
 
+        # Update to FETCHING should set started_at
         updated = job_store.update_job_status("test-123", JobStatus.FETCHING)
         assert updated is not None
         assert updated.status == JobStatus.FETCHING
+        assert updated.started_at is not None
 
         # Update to completed should set completed_at
         completed = job_store.update_job_status("test-123", JobStatus.COMPLETED)
