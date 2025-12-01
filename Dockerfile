@@ -49,7 +49,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
     ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 # Create non-root user for security
-RUN useradd --create-home --shell /bin/bash appuser && \
+RUN useradd --create-home --shell /bin/bash --uid 1001 appuser && \
     chown -R appuser:appuser /app && \
     chown -R appuser:appuser /usr/share/nginx/html && \
     chown -R appuser:appuser /var/log/nginx && \

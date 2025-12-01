@@ -19,15 +19,107 @@ spec:
     metadata:
       labels:
         app: inker
+        version: v1
       annotations:
         sidecar.istio.io/inject: "true"
         sidecar.istio.io/proxyCPU: 50m
-        sidecar.istio.io/proxyCPULimit: 500m
-        sidecar.istio.io/proxyMemory: 32Mi
-        sidecar.istio.io/proxyMemoryLimit: 512Mi
+        sidecar.istio.io/proxyCPULimit: 200m
+        sidecar.istio.io/proxyMemory: 64Mi
+        sidecar.istio.io/proxyMemoryLimit: 256Mi
+        auth.cat-herding.net/provider: oauth2-proxy-sidecar
+        auth.cat-herding.net/domain: inker.cat-herding.net
     spec:
       automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+      tolerations:
+        - key: kubernetes.azure.com/scalesetpriority
+          operator: Equal
+          value: spot
+          effect: NoSchedule
       containers:
+      # OAuth2 Proxy Sidecar
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - --config=/etc/oauth2-proxy/oauth2_proxy.cfg
+          - --whitelist-domain=.cat-herding.net
+        env:
+          - name: OAUTH2_PROXY_REDIRECT_URL
+            value: https://auth.cat-herding.net/oauth2/callback
+          - name: OAUTH2_PROXY_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-secret
+                key: client-id
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-secret
+                key: client-secret
+          - name: OAUTH2_PROXY_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-secret
+                key: cookie-secret
+          - name: OAUTH2_PROXY_UPSTREAMS
+            value: http://127.0.0.1:8080
+        ports:
+          - containerPort: 4180
+            name: proxy
+            protocol: TCP
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /ping
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1001
+      volumes:
+        - name: oauth2-proxy-config
+          configMap:
+            name: oauth2-proxy-sidecar-config
+        - name: oauth2-proxy-templates
+          configMap:
+            name: oauth2-proxy-templates
+            port: 4180
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 2000
+        volumeMounts:
+          - name: oauth2-proxy-config
+            mountPath: /etc/oauth2-proxy
+            readOnly: true
+          - name: oauth2-proxy-templates
+            mountPath: /templates
+            readOnly: true
+      
+      # Application container
       - name: inker
         image: gabby.azurecr.io/inker:latest
         imagePullPolicy: Always
