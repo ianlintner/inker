@@ -65,12 +65,12 @@ USER appuser
 # Copy startup script
 COPY k8s/start.sh /app/start.sh
 
-# Expose port 80 for nginx
-EXPOSE 80
+# Expose port 8080 for nginx (non-root)
+EXPOSE 8080
 
 # Health check on nginx port
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:80/health')" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
 
 # Start both nginx and uvicorn
 CMD ["/bin/bash", "/app/start.sh"]
