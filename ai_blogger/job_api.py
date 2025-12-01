@@ -200,6 +200,7 @@ class JobService:
             return job
 
         tracer = get_tracer()
+        current_status = job.status.value  # Track for error handling
         try:
             with track_job_execution(job_id, "blog_post"):
                 with tracer.start_as_current_span(
@@ -210,6 +211,7 @@ class JobService:
                     prev_status = job.status.value
                     self.store.update_job_status(job_id, JobStatus.FETCHING)
                     record_job_status_change(prev_status, JobStatus.FETCHING.value)
+                    current_status = JobStatus.FETCHING.value
                     logger.info(f"Job {job_id}: Fetching articles...")
 
                     topics = job.request.topics or TOPICS
@@ -235,6 +237,7 @@ class JobService:
                     # Step 2: Generate candidates
                     record_job_status_change(JobStatus.FETCHING.value, JobStatus.GENERATING.value)
                     self.store.update_job_status(job_id, JobStatus.GENERATING)
+                    current_status = JobStatus.GENERATING.value
                     logger.info(f"Job {job_id}: Generating candidates...")
 
                     num_candidates = job.request.num_candidates
@@ -253,6 +256,7 @@ class JobService:
                     # Step 3: Score candidates
                     record_job_status_change(JobStatus.GENERATING.value, JobStatus.SCORING.value)
                     self.store.update_job_status(job_id, JobStatus.SCORING)
+                    current_status = JobStatus.SCORING.value
                     logger.info(f"Job {job_id}: Scoring candidates...")
 
                     scored = score_candidates(candidates)
@@ -270,6 +274,7 @@ class JobService:
                     # Step 4: Refine winner
                     record_job_status_change(JobStatus.SCORING.value, JobStatus.REFINING.value)
                     self.store.update_job_status(job_id, JobStatus.REFINING)
+                    current_status = JobStatus.REFINING.value
                     logger.info(f"Job {job_id}: Refining winner...")
 
                     final_content = refine_winner(winner)
@@ -314,9 +319,6 @@ class JobService:
                 details=type(e).__name__,
             )
 
-            # Get current status from store to track status change
-            current_job = self.store.get_job(job_id)
-            current_status = current_job.status.value if current_job else "unknown"
             record_job_status_change(current_status, JobStatus.FAILED.value)
             job = self.store.update_job_status(job_id, JobStatus.FAILED, error=error)
             return job

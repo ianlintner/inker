@@ -695,7 +695,7 @@ def create_app(
         duration = time.time() - start_time
 
         # Track metrics for API endpoints (exclude /metrics itself)
-        if not request.url.path.startswith("/metrics"):
+        if request.url.path != "/metrics":
             track_api_request(
                 method=request.method,
                 endpoint=request.url.path,

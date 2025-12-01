@@ -224,9 +224,7 @@ class TestMetricsEndpoint:
 
         response = client.get("/metrics")
         assert response.status_code == 200
-        assert "text/plain" in response.headers["content-type"] or "text/plain" in response.headers.get(
-            "content-type", ""
-        )
+        assert "text/plain" in response.headers.get("content-type", "")
 
         # Check for some expected metrics in the output
         content = response.text

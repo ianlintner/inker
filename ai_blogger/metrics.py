@@ -33,7 +33,6 @@ except ImportError:
 # OpenTelemetry tracing
 try:
     from opentelemetry import trace
-    from opentelemetry.trace import Span, SpanKind, Status, StatusCode
 
     OPENTELEMETRY_AVAILABLE = True
 except ImportError:
