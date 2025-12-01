@@ -718,6 +718,13 @@ def create_app(
             )
 
     # Include the router
+        # Add root-level health endpoint for Kubernetes probes
+        @app.get("/health")
+        @app.get("/healthz")
+        async def root_health_check():
+            """Simple health check endpoint at root level for probes."""
+            return {"status": "healthy"}
+
     app.include_router(router, prefix="/api")
 
     # Serve frontend static files if enabled
@@ -769,6 +776,12 @@ def create_app(
             )
 
     return app
+# Module-level app instance (for uvicorn to import)
+# ============================================================================
+app = create_app()
+
+
+# ============================================================================
 
 
 # ============================================================================
