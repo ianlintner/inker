@@ -6,7 +6,7 @@ metadata:
   labels:
     app: inker
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: inker
@@ -156,8 +156,14 @@ spec:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
-
+      # CSI volume for Azure Key Vault Secrets Provider
       volumes:
         - name: oauth2-proxy-config
           configMap:
             name: oauth2-proxy-sidecar-config
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: inker-oauth2-secrets

@@ -6,11 +6,10 @@ metadata:
 data:
   oauth2_proxy.cfg: |
     # OAuth2 Proxy Configuration for Inker
-    provider = "oidc"
-    provider_display_name = "OAuth2 Server"
-    oidc_issuer_url = "https://oauth.bigboy.example.com"
+    provider = "github"
+    provider_display_name = "GitHub"
     
-    # Redirect URL
+    # Redirect URL (must match GitHub OAuth app configuration)
     redirect_url = "https://inker.cat-herding.net/oauth2/callback"
     
     # Upstreams
