@@ -105,6 +105,13 @@ spec:
         - containerPort: 8080
           name: http
           protocol: TCP
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1001
         env:
         - name: PORT
           value: "8000"
