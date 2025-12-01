@@ -455,12 +455,6 @@ class TestQueueBackendIntegration:
 class TestJobManagementIntegration:
     """End-to-end tests for job management API."""
 
-    @pytest.fixture
-    def temp_job_dir(self):
-        """Create temporary directory for job storage."""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            yield tmpdir
-
     def test_job_creation_and_retrieval(self, temp_job_dir, setup_api_keys):
         """Test creating and retrieving jobs through the job API."""
         # Create job service
