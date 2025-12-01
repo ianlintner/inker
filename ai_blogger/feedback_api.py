@@ -20,6 +20,11 @@ from .feedback_models import (
     RejectionRequest,
     RevisionRequest,
 )
+from .metrics import (
+    feedback_operations_total,
+    get_tracer,
+    record_approval_action,
+)
 from .persistence import (
     ApprovalStatus,
     BlogPost,
@@ -116,51 +121,58 @@ class FeedbackService:
         Returns:
             FeedbackResponse with the result.
         """
-        post = self.storage.get_post(request.post_id)
-        if not post:
-            logger.warning(f"Post {request.post_id} not found for approval")
-            return FeedbackResponse(
-                success=False,
-                post_id=request.post_id,
-                new_status="",
-                feedback_id="",
-                message=f"Post {request.post_id} not found",
+        tracer = get_tracer()
+        with tracer.start_as_current_span(
+            "feedback.approve_post",
+            attributes={"post.id": request.post_id},
+        ):
+            feedback_operations_total.labels(operation="approve").inc()
+            post = self.storage.get_post(request.post_id)
+            if not post:
+                logger.warning(f"Post {request.post_id} not found for approval")
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status="",
+                    feedback_id="",
+                    message=f"Post {request.post_id} not found",
+                )
+
+            # Create feedback entry for learning
+            entry = self._create_feedback_entry(
+                post=post,
+                action="approved",
+                feedback=request.feedback,
+                ratings=request.ratings,
+                actor=request.actor,
             )
 
-        # Create feedback entry for learning
-        entry = self._create_feedback_entry(
-            post=post,
-            action="approved",
-            feedback=request.feedback,
-            ratings=request.ratings,
-            actor=request.actor,
-        )
+            # Perform the approval
+            updated = self.storage.approve_post(
+                request.post_id,
+                feedback=request.feedback,
+                actor=request.actor,
+            )
 
-        # Perform the approval
-        updated = self.storage.approve_post(
-            request.post_id,
-            feedback=request.feedback,
-            actor=request.actor,
-        )
+            if not updated:
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status=post.approval_status.value,
+                    feedback_id=entry.id,
+                    message="Failed to approve post",
+                )
 
-        if not updated:
+            logger.info(f"Post {request.post_id} approved by {request.actor or 'unknown'}")
+            record_approval_action("approved")
+
             return FeedbackResponse(
-                success=False,
+                success=True,
                 post_id=request.post_id,
-                new_status=post.approval_status.value,
+                new_status=ApprovalStatus.APPROVED.value,
                 feedback_id=entry.id,
-                message="Failed to approve post",
+                message="Post approved successfully",
             )
-
-        logger.info(f"Post {request.post_id} approved by {request.actor or 'unknown'}")
-
-        return FeedbackResponse(
-            success=True,
-            post_id=request.post_id,
-            new_status=ApprovalStatus.APPROVED.value,
-            feedback_id=entry.id,
-            message="Post approved successfully",
-        )
 
     def reject_post(self, request: RejectionRequest) -> FeedbackResponse:
         """Reject a blog post.
@@ -171,52 +183,59 @@ class FeedbackService:
         Returns:
             FeedbackResponse with the result.
         """
-        post = self.storage.get_post(request.post_id)
-        if not post:
-            logger.warning(f"Post {request.post_id} not found for rejection")
-            return FeedbackResponse(
-                success=False,
-                post_id=request.post_id,
-                new_status="",
-                feedback_id="",
-                message=f"Post {request.post_id} not found",
+        tracer = get_tracer()
+        with tracer.start_as_current_span(
+            "feedback.reject_post",
+            attributes={"post.id": request.post_id},
+        ):
+            feedback_operations_total.labels(operation="reject").inc()
+            post = self.storage.get_post(request.post_id)
+            if not post:
+                logger.warning(f"Post {request.post_id} not found for rejection")
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status="",
+                    feedback_id="",
+                    message=f"Post {request.post_id} not found",
+                )
+
+            # Create feedback entry for learning
+            entry = self._create_feedback_entry(
+                post=post,
+                action="rejected",
+                feedback=request.feedback,
+                categories=request.categories,
+                ratings=request.ratings,
+                actor=request.actor,
             )
 
-        # Create feedback entry for learning
-        entry = self._create_feedback_entry(
-            post=post,
-            action="rejected",
-            feedback=request.feedback,
-            categories=request.categories,
-            ratings=request.ratings,
-            actor=request.actor,
-        )
+            # Perform the rejection
+            updated = self.storage.reject_post(
+                request.post_id,
+                feedback=request.feedback,
+                actor=request.actor,
+            )
 
-        # Perform the rejection
-        updated = self.storage.reject_post(
-            request.post_id,
-            feedback=request.feedback,
-            actor=request.actor,
-        )
+            if not updated:
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status=post.approval_status.value,
+                    feedback_id=entry.id,
+                    message="Failed to reject post",
+                )
 
-        if not updated:
+            logger.info(f"Post {request.post_id} rejected by {request.actor or 'unknown'}")
+            record_approval_action("rejected")
+
             return FeedbackResponse(
-                success=False,
+                success=True,
                 post_id=request.post_id,
-                new_status=post.approval_status.value,
+                new_status=ApprovalStatus.REJECTED.value,
                 feedback_id=entry.id,
-                message="Failed to reject post",
+                message="Post rejected successfully",
             )
-
-        logger.info(f"Post {request.post_id} rejected by {request.actor or 'unknown'}")
-
-        return FeedbackResponse(
-            success=True,
-            post_id=request.post_id,
-            new_status=ApprovalStatus.REJECTED.value,
-            feedback_id=entry.id,
-            message="Post rejected successfully",
-        )
 
     def request_revision(self, request: RevisionRequest) -> FeedbackResponse:
         """Request revision for a blog post.
@@ -227,52 +246,59 @@ class FeedbackService:
         Returns:
             FeedbackResponse with the result.
         """
-        post = self.storage.get_post(request.post_id)
-        if not post:
-            logger.warning(f"Post {request.post_id} not found for revision request")
-            return FeedbackResponse(
-                success=False,
-                post_id=request.post_id,
-                new_status="",
-                feedback_id="",
-                message=f"Post {request.post_id} not found",
+        tracer = get_tracer()
+        with tracer.start_as_current_span(
+            "feedback.request_revision",
+            attributes={"post.id": request.post_id},
+        ):
+            feedback_operations_total.labels(operation="revision").inc()
+            post = self.storage.get_post(request.post_id)
+            if not post:
+                logger.warning(f"Post {request.post_id} not found for revision request")
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status="",
+                    feedback_id="",
+                    message=f"Post {request.post_id} not found",
+                )
+
+            # Create feedback entry for learning
+            entry = self._create_feedback_entry(
+                post=post,
+                action="revision_requested",
+                feedback=request.feedback,
+                categories=request.categories,
+                ratings=request.ratings,
+                actor=request.actor,
             )
 
-        # Create feedback entry for learning
-        entry = self._create_feedback_entry(
-            post=post,
-            action="revision_requested",
-            feedback=request.feedback,
-            categories=request.categories,
-            ratings=request.ratings,
-            actor=request.actor,
-        )
+            # Perform the revision request
+            updated = self.storage.request_revision(
+                request.post_id,
+                feedback=request.feedback,
+                actor=request.actor,
+            )
 
-        # Perform the revision request
-        updated = self.storage.request_revision(
-            request.post_id,
-            feedback=request.feedback,
-            actor=request.actor,
-        )
+            if not updated:
+                return FeedbackResponse(
+                    success=False,
+                    post_id=request.post_id,
+                    new_status=post.approval_status.value,
+                    feedback_id=entry.id,
+                    message="Failed to request revision",
+                )
 
-        if not updated:
+            logger.info(f"Revision requested for post {request.post_id} by {request.actor or 'unknown'}")
+            record_approval_action("revision_requested")
+
             return FeedbackResponse(
-                success=False,
+                success=True,
                 post_id=request.post_id,
-                new_status=post.approval_status.value,
+                new_status=ApprovalStatus.REVISION_REQUESTED.value,
                 feedback_id=entry.id,
-                message="Failed to request revision",
+                message="Revision requested successfully",
             )
-
-        logger.info(f"Revision requested for post {request.post_id} by {request.actor or 'unknown'}")
-
-        return FeedbackResponse(
-            success=True,
-            post_id=request.post_id,
-            new_status=ApprovalStatus.REVISION_REQUESTED.value,
-            feedback_id=entry.id,
-            message="Revision requested successfully",
-        )
 
     def get_post_feedback(self, post_id: str) -> List[FeedbackEntry]:
         """Get all feedback entries for a post.

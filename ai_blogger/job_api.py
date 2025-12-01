@@ -24,6 +24,12 @@ from .job_models import (
     ScoringInfo,
 )
 from .job_store import JobStore
+from .metrics import (
+    get_tracer,
+    record_job_status_change,
+    record_job_submission,
+    track_job_execution,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +77,7 @@ class JobService:
             existing = self.store.get_job_by_correlation_id(request.correlation_id)
             if existing:
                 logger.info(f"Returning existing job {existing.id} for correlation_id {request.correlation_id}")
+                record_job_submission(is_duplicate=True)
                 return JobSubmitResponse(
                     job_id=existing.id,
                     correlation_id=existing.correlation_id,
@@ -84,6 +91,7 @@ class JobService:
         job = self.store.create_job(job_id, request)
 
         logger.info(f"Created new job {job_id}")
+        record_job_submission(is_duplicate=False)
 
         return JobSubmitResponse(
             job_id=job.id,
@@ -191,87 +199,111 @@ class JobService:
             logger.warning(f"Job {job_id} is not pending (status: {job.status})")
             return job
 
+        tracer = get_tracer()
         try:
-            # Step 1: Fetch articles (started_at is set by update_job_status)
-            self.store.update_job_status(job_id, JobStatus.FETCHING)
-            logger.info(f"Job {job_id}: Fetching articles...")
+            with track_job_execution(job_id, "blog_post"):
+                with tracer.start_as_current_span(
+                    "job.fetch_articles",
+                    attributes={"job.id": job_id},
+                ):
+                    # Step 1: Fetch articles (started_at is set by update_job_status)
+                    prev_status = job.status.value
+                    self.store.update_job_status(job_id, JobStatus.FETCHING)
+                    record_job_status_change(prev_status, JobStatus.FETCHING.value)
+                    logger.info(f"Job {job_id}: Fetching articles...")
 
-            topics = job.request.topics or TOPICS
-            sources = job.request.sources or get_available_sources()
-            max_results = job.request.max_results or SOURCE_DEFAULTS.copy()
+                    topics = job.request.topics or TOPICS
+                    sources = job.request.sources or get_available_sources()
+                    max_results = job.request.max_results or SOURCE_DEFAULTS.copy()
 
-            articles = fetch_all_articles(
-                topics=topics,
-                sources=sources,
-                max_results=max_results,
-            )
+                    articles = fetch_all_articles(
+                        topics=topics,
+                        sources=sources,
+                        max_results=max_results,
+                    )
 
-            if not articles:
-                raise ValueError("No articles found for the given topics")
+                    if not articles:
+                        raise ValueError("No articles found for the given topics")
 
-            articles_count = len(articles)
-            logger.info(f"Job {job_id}: Fetched {articles_count} articles")
+                    articles_count = len(articles)
+                    logger.info(f"Job {job_id}: Fetched {articles_count} articles")
 
-            # Step 2: Generate candidates
-            self.store.update_job_status(job_id, JobStatus.GENERATING)
-            logger.info(f"Job {job_id}: Generating candidates...")
+                with tracer.start_as_current_span(
+                    "job.generate_candidates",
+                    attributes={"job.id": job_id},
+                ):
+                    # Step 2: Generate candidates
+                    record_job_status_change(JobStatus.FETCHING.value, JobStatus.GENERATING.value)
+                    self.store.update_job_status(job_id, JobStatus.GENERATING)
+                    logger.info(f"Job {job_id}: Generating candidates...")
 
-            num_candidates = job.request.num_candidates
-            candidates = generate_candidates(articles, num_candidates=num_candidates)
+                    num_candidates = job.request.num_candidates
+                    candidates = generate_candidates(articles, num_candidates=num_candidates)
 
-            if not candidates:
-                raise ValueError("No candidates were generated")
+                    if not candidates:
+                        raise ValueError("No candidates were generated")
 
-            candidates_count = len(candidates)
-            logger.info(f"Job {job_id}: Generated {candidates_count} candidates")
+                    candidates_count = len(candidates)
+                    logger.info(f"Job {job_id}: Generated {candidates_count} candidates")
 
-            # Step 3: Score candidates
-            self.store.update_job_status(job_id, JobStatus.SCORING)
-            logger.info(f"Job {job_id}: Scoring candidates...")
+                with tracer.start_as_current_span(
+                    "job.score_candidates",
+                    attributes={"job.id": job_id},
+                ):
+                    # Step 3: Score candidates
+                    record_job_status_change(JobStatus.GENERATING.value, JobStatus.SCORING.value)
+                    self.store.update_job_status(job_id, JobStatus.SCORING)
+                    logger.info(f"Job {job_id}: Scoring candidates...")
 
-            scored = score_candidates(candidates)
+                    scored = score_candidates(candidates)
 
-            if not scored:
-                raise ValueError("No candidates were scored")
+                    if not scored:
+                        raise ValueError("No candidates were scored")
 
-            winner = scored[0]
-            logger.info(f"Job {job_id}: Winner '{winner.candidate.title}' with score {winner.score.total:.2f}")
+                    winner = scored[0]
+                    logger.info(f"Job {job_id}: Winner '{winner.candidate.title}' with score {winner.score.total:.2f}")
 
-            # Step 4: Refine winner
-            self.store.update_job_status(job_id, JobStatus.REFINING)
-            logger.info(f"Job {job_id}: Refining winner...")
+                with tracer.start_as_current_span(
+                    "job.refine_winner",
+                    attributes={"job.id": job_id},
+                ):
+                    # Step 4: Refine winner
+                    record_job_status_change(JobStatus.SCORING.value, JobStatus.REFINING.value)
+                    self.store.update_job_status(job_id, JobStatus.REFINING)
+                    logger.info(f"Job {job_id}: Refining winner...")
 
-            final_content = refine_winner(winner)
+                    final_content = refine_winner(winner)
 
-            # Build result
-            word_count = len(final_content.split())
+                # Build result
+                word_count = len(final_content.split())
 
-            result = JobResult(
-                markdown_preview=MarkdownPreview(
-                    title=winner.candidate.title,
-                    content=final_content,
-                    word_count=word_count,
-                    topic=winner.candidate.topic,
-                    sources=winner.candidate.sources,
-                ),
-                scoring=ScoringInfo(
-                    relevance=winner.score.relevance,
-                    originality=winner.score.originality,
-                    depth=winner.score.depth,
-                    clarity=winner.score.clarity,
-                    engagement=winner.score.engagement,
-                    total=winner.score.total,
-                    reasoning=winner.score.reasoning,
-                ),
-                articles_fetched=articles_count,
-                candidates_generated=candidates_count,
-            )
+                result = JobResult(
+                    markdown_preview=MarkdownPreview(
+                        title=winner.candidate.title,
+                        content=final_content,
+                        word_count=word_count,
+                        topic=winner.candidate.topic,
+                        sources=winner.candidate.sources,
+                    ),
+                    scoring=ScoringInfo(
+                        relevance=winner.score.relevance,
+                        originality=winner.score.originality,
+                        depth=winner.score.depth,
+                        clarity=winner.score.clarity,
+                        engagement=winner.score.engagement,
+                        total=winner.score.total,
+                        reasoning=winner.score.reasoning,
+                    ),
+                    articles_fetched=articles_count,
+                    candidates_generated=candidates_count,
+                )
 
-            # Mark job as completed
-            job = self.store.update_job_status(job_id, JobStatus.COMPLETED, result=result)
+                # Mark job as completed
+                record_job_status_change(JobStatus.REFINING.value, JobStatus.COMPLETED.value)
+                job = self.store.update_job_status(job_id, JobStatus.COMPLETED, result=result)
 
-            logger.info(f"Job {job_id}: Completed successfully")
-            return job
+                logger.info(f"Job {job_id}: Completed successfully")
+                return job
 
         except Exception as e:
             logger.exception(f"Job {job_id} failed: {e}")
@@ -282,6 +314,10 @@ class JobService:
                 details=type(e).__name__,
             )
 
+            # Get current status from store to track status change
+            current_job = self.store.get_job(job_id)
+            current_status = current_job.status.value if current_job else "unknown"
+            record_job_status_change(current_status, JobStatus.FAILED.value)
             job = self.store.update_job_status(job_id, JobStatus.FAILED, error=error)
             return job
 

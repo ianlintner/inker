@@ -67,6 +67,26 @@ from .queue import (
 )
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
 
+# Metrics and Observability
+from .metrics import (
+    OPENTELEMETRY_AVAILABLE,
+    PROMETHEUS_AVAILABLE,
+    get_tracer,
+    record_approval_action,
+    record_job_status_change,
+    record_job_submission,
+    record_queue_complete,
+    record_queue_dequeue,
+    record_queue_enqueue,
+    record_queue_fail,
+    set_system_info,
+    track_api_request,
+    track_job_execution,
+    track_storage_operation,
+    traced,
+    update_queue_size,
+)
+
 # Conditional import for Frontend API (requires fastapi)
 try:
     from .frontend_api import (
@@ -164,4 +184,21 @@ __all__ = [
     "get_date_string",
     "get_timestamp",
     "slugify",
+    # Metrics and Observability
+    "PROMETHEUS_AVAILABLE",
+    "OPENTELEMETRY_AVAILABLE",
+    "get_tracer",
+    "traced",
+    "track_job_execution",
+    "track_storage_operation",
+    "track_api_request",
+    "record_job_submission",
+    "record_job_status_change",
+    "record_approval_action",
+    "record_queue_enqueue",
+    "record_queue_dequeue",
+    "record_queue_complete",
+    "record_queue_fail",
+    "update_queue_size",
+    "set_system_info",
 ]

@@ -11,6 +11,13 @@ import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
+from ..metrics import (
+    record_queue_complete,
+    record_queue_dequeue,
+    record_queue_enqueue,
+    record_queue_fail,
+    update_queue_size,
+)
 from .base import QueueBackend, QueueConfig
 from .models import (
     FailedJobInfo,
@@ -118,6 +125,7 @@ class MemoryQueue(QueueBackend):
                 self._correlation_index[job_create.correlation_id] = job_id
 
             logger.debug(f"Enqueued job {job_id} ({job_create.job_type})")
+            record_queue_enqueue(job_create.job_type)
             return job
 
     def enqueue_batch(self, jobs: List[QueueJobCreate]) -> List[QueueJob]:
@@ -177,6 +185,7 @@ class MemoryQueue(QueueBackend):
                     self._add_to_pending_queue(skipped)
 
                 logger.debug(f"Dequeued job {job_id} for worker {worker_id}")
+                record_queue_dequeue(job.job_type)
                 return job
 
             # Re-add skipped jobs back to queue if no job was found
@@ -218,6 +227,7 @@ class MemoryQueue(QueueBackend):
             job.locked_by = None
 
             logger.debug(f"Completed job {job_id}")
+            record_queue_complete()
             return job
 
     def fail(
@@ -259,6 +269,8 @@ class MemoryQueue(QueueBackend):
                 job.status = QueueJobStatus.DEAD
                 job.completed_at = now
                 logger.debug(f"Job {job_id} exceeded max retries, marked as dead")
+
+            record_queue_fail(will_retry=will_retry)
 
             return FailedJobInfo(
                 job_id=job_id,
@@ -447,6 +459,13 @@ class MemoryQueue(QueueBackend):
             avg_processing_time = None
             if processing_times:
                 avg_processing_time = sum(processing_times) / len(processing_times)
+
+            # Update queue size gauges for Prometheus
+            update_queue_size("pending", status_counts.get(QueueJobStatus.PENDING, 0))
+            update_queue_size("processing", status_counts.get(QueueJobStatus.PROCESSING, 0))
+            update_queue_size("completed", status_counts.get(QueueJobStatus.COMPLETED, 0))
+            update_queue_size("failed", status_counts.get(QueueJobStatus.FAILED, 0))
+            update_queue_size("dead", status_counts.get(QueueJobStatus.DEAD, 0))
 
             return QueueStats(
                 total_jobs=len(self._jobs),
