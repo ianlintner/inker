@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inker
+  namespace: default
+  labels:
+    app: inker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: inker
+      annotations:
+        sidecar.istio.io/inject: "true"
+        sidecar.istio.io/proxyCPU: 50m
+        sidecar.istio.io/proxyCPULimit: 500m
+        sidecar.istio.io/proxyMemory: 32Mi
+        sidecar.istio.io/proxyMemoryLimit: 512Mi
+    spec:
+      automountServiceAccountToken: true
+      containers:
+      - name: inker
+        image: gabby.azurecr.io/inker:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: PORT
+          value: "8000"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: inker-secrets
+              key: OPENAI_API_KEY
+        - name: TAVILY_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: inker-secrets
+              key: TAVILY_API_KEY
+              optional: true
+        - name: YOUTUBE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: inker-secrets
+              key: YOUTUBE_API_KEY
+              optional: true
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: inker-secrets
+              key: DATABASE_URL
+              optional: true
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: inker-secrets
+              key: REDIS_URL
+              optional: true
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

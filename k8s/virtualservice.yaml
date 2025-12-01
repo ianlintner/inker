@@ -1,0 +1,65 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: inker-virtualservice
+  namespace: default
+spec:
+  gateways:
+  - aks-istio-ingress/cat-herding-gateway
+  hosts:
+  - inker.cat-herding.net
+  http:
+  # API routes
+  - match:
+    - uri:
+        prefix: /api
+    corsPolicy:
+      allowCredentials: true
+      allowHeaders:
+      - '*'
+      allowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+      allowOrigins:
+      - regex: .*
+    route:
+    - destination:
+        host: inker
+        port:
+          number: 80
+    timeout: 120s
+  
+  # Health check endpoints
+  - match:
+    - uri:
+        exact: /health
+    - uri:
+        exact: /healthz
+    route:
+    - destination:
+        host: inker
+        port:
+          number: 80
+  
+  # Metrics endpoint
+  - match:
+    - uri:
+        exact: /metrics
+    route:
+    - destination:
+        host: inker
+        port:
+          number: 80
+  
+  # Frontend (catch-all)
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: inker
+        port:
+          number: 80
