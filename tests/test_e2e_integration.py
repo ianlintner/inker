@@ -103,19 +103,6 @@ def ensure_api_key(monkeypatch, env_var: str, alias: Optional[str] = None):
 class TestEndToEndPipeline:
     """End-to-end tests for the complete blog generation pipeline."""
 
-    @pytest.fixture
-    def temp_output_dir(self):
-        """Create a temporary directory for output files."""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            yield Path(tmpdir)
-
-    @pytest.fixture
-    def setup_api_keys(self, monkeypatch):
-        """Ensure all necessary API keys are set."""
-        ensure_api_key(monkeypatch, "TAVILY_API_KEY", "TAVILY_KEY")
-        ensure_api_key(monkeypatch, "OPENAI_API_KEY")
-        ensure_api_key(monkeypatch, "YOUTUBE_API_KEY")
-
     def test_complete_pipeline_hacker_news_only(self, temp_output_dir, setup_api_keys):
         """Test complete pipeline using only Hacker News (no API key required)."""
         # Skip if OpenAI not available
@@ -272,16 +259,6 @@ class TestEndToEndPipeline:
 
 class TestStorageBackendIntegration:
     """End-to-end tests for storage backend integration."""
-
-    @pytest.fixture
-    def temp_db_path(self):
-        """Create a temporary database file."""
-        with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
-            db_path = f.name
-        yield db_path
-        # Cleanup
-        if os.path.exists(db_path):
-            os.unlink(db_path)
 
     def test_sqlite_storage_full_workflow(self, temp_db_path, setup_api_keys):
         """Test complete workflow with SQLite storage."""
