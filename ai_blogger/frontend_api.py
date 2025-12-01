@@ -627,6 +627,8 @@ def create_app(
     description: str = "RESTful API for AI Blogger job management and content workflow",
     version: str = "1.0.0",
     cors_origins: Optional[List[str]] = None,
+    serve_frontend: bool = True,
+    frontend_dir: Optional[str] = None,
 ) -> FastAPI:
     """Create a FastAPI application with the frontend API router.
 
@@ -637,6 +639,9 @@ def create_app(
         cors_origins: List of allowed CORS origins. Defaults to ["*"] for
             development convenience. For production, specify explicit origins
             like ["https://myapp.example.com"].
+        serve_frontend: Whether to serve the frontend static files.
+        frontend_dir: Path to the frontend build directory. If None, looks for
+            'frontend/dist' relative to this file or the current directory.
 
     Returns:
         Configured FastAPI application.
@@ -645,6 +650,9 @@ def create_app(
         The default CORS configuration allows all origins, which is suitable
         for development but should be restricted in production environments.
     """
+    import os
+    from pathlib import Path
+
     app = FastAPI(
         title=title,
         description=description,
@@ -669,6 +677,54 @@ def create_app(
 
     # Include the router
     app.include_router(router, prefix="/api")
+
+    # Serve frontend static files if enabled
+    if serve_frontend:
+        from fastapi.responses import FileResponse
+        from fastapi.staticfiles import StaticFiles
+
+        # Find the frontend directory
+        if frontend_dir is None:
+            # Look for frontend/dist relative to this file
+            this_dir = Path(__file__).parent
+            possible_paths = [
+                this_dir.parent / "frontend" / "dist",  # Development: project_root/frontend/dist
+                this_dir / "frontend" / "dist",  # Installed: package/frontend/dist
+                Path.cwd() / "frontend" / "dist",  # Current directory
+            ]
+            for path in possible_paths:
+                if path.exists() and (path / "index.html").exists():
+                    frontend_dir = str(path)
+                    break
+
+        if frontend_dir and os.path.exists(frontend_dir):
+            frontend_path = Path(frontend_dir)
+
+            # Serve static assets
+            if (frontend_path / "assets").exists():
+                app.mount("/assets", StaticFiles(directory=str(frontend_path / "assets")), name="assets")
+
+            # Serve other static files (favicon, etc.)
+            @app.get("/vite.svg")
+            async def serve_vite_svg():
+                svg_path = frontend_path / "vite.svg"
+                if svg_path.exists():
+                    return FileResponse(str(svg_path), media_type="image/svg+xml")
+                return FileResponse(str(frontend_path / "index.html"))
+
+            # Serve index.html for SPA routing (catch-all for non-API routes)
+            @app.get("/{full_path:path}")
+            async def serve_spa(full_path: str):
+                # Don't serve index.html for API routes or docs
+                if full_path.startswith("api/") or full_path in ["docs", "redoc", "openapi.json"]:
+                    return None
+                return FileResponse(str(frontend_path / "index.html"))
+
+            logger.info(f"Serving frontend from: {frontend_dir}")
+        else:
+            logger.warning(
+                "Frontend directory not found. Run 'npm run build' in the frontend directory to build the frontend."
+            )
 
     return app
 

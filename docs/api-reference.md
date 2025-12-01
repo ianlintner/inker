@@ -1058,6 +1058,69 @@ When running, access:
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 
+---
+
+## Frontend UI
+
+The AI Blogger includes a React-based frontend UI for job management and approval workflows.
+
+### Building the Frontend
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+### Running with Frontend
+
+After building, the frontend is automatically served by the Python backend:
+
+```bash
+# The create_app function will detect and serve frontend/dist
+uvicorn ai_blogger.frontend_api:create_app --factory --host 0.0.0.0 --port 8000
+```
+
+Access the UI at `http://localhost:8000/`.
+
+### Frontend Features
+
+The frontend provides:
+
+1. **Job Submission Form**: Create new blog post generation jobs with:
+   - Topic selection (default topics + custom topics)
+   - Source selection (Hacker News, Web Search, YouTube)
+   - Number of candidates slider (1-10)
+   - Correlation ID for idempotency
+
+2. **Job List View**: Monitor all jobs with:
+   - Real-time status updates (polling every 5 seconds)
+   - Color-coded status badges
+   - Progress bars for in-progress jobs
+   - Quick job selection
+
+3. **Post Review Panel**: Review and approve completed jobs with:
+   - Full markdown preview
+   - Scoring breakdown visualization
+   - Approve/Reject/Request Revision buttons
+   - Feedback categories and comments
+   - Job execution controls
+
+### Development Mode
+
+For frontend development with hot reload:
+
+```bash
+# Terminal 1: Run the Python backend
+uvicorn ai_blogger.frontend_api:create_app --factory --reload --port 8000
+
+# Terminal 2: Run Vite dev server
+cd frontend
+npm run dev
+```
+
+The Vite dev server proxies API requests to the backend.
+
 ## See Also
 
 - [Architecture](architecture.md) - System design overview
