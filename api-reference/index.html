@@ -1,0 +1,2854 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="A LangChain-based automated daily AI blogger" name="description"/>
+<meta content="Ian Lintner" name="author"/>
+<link href="https://ianlintner.github.io/inker/api-reference/" rel="canonical"/>
+<link href="../developer-guide/" rel="prev"/>
+<link href="../operations/" rel="next"/>
+<link href="../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.0" name="generator"/>
+<title>API Reference - AI Blogger (Inker) Documentation</title>
+<link href="../assets/stylesheets/main.618322db.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#api-reference">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="AI Blogger (Inker) Documentation" class="md-header__button md-logo" data-md-component="logo" href=".." title="AI Blogger (Inker) Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            AI Blogger (Inker) Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ianlintner/inker" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</div>
+<div class="md-source__repository">
+    ianlintner/inker
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="..">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../getting-started/">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../architecture/">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../persistence/">
+        
+  
+  
+    
+  
+  Persistence
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../developer-guide/">
+        
+  
+  
+    
+  
+  Developer Guide
+
+      </a>
+</li>
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="./">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../operations/">
+        
+  
+  
+    
+  
+  Operations
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../contributing/">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="AI Blogger (Inker) Documentation" class="md-nav__button md-logo" data-md-component="logo" href=".." title="AI Blogger (Inker) Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    AI Blogger (Inker) Documentation
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/ianlintner/inker" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</div>
+<div class="md-source__repository">
+    ianlintner/inker
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../getting-started/">
+<span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../architecture/">
+<span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../persistence/">
+<span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../developer-guide/">
+<span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#module-overview">
+<span class="md-ellipsis">
+      
+        Module Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggermodels">
+<span class="md-ellipsis">
+      
+        ai_blogger.models
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#article">
+<span class="md-ellipsis">
+      
+        Article
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#candidatepost">
+<span class="md-ellipsis">
+      
+        CandidatePost
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#postscore">
+<span class="md-ellipsis">
+      
+        PostScore
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scoredpost">
+<span class="md-ellipsis">
+      
+        ScoredPost
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfetchers">
+<span class="md-ellipsis">
+      
+        ai_blogger.fetchers
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.fetchers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basefetcher">
+<span class="md-ellipsis">
+      
+        BaseFetcher
+      
+    </span>
+</a>
+<nav aria-label="BaseFetcher" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#is_available">
+<span class="md-ellipsis">
+      
+        is_available()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fetch">
+<span class="md-ellipsis">
+      
+        fetch()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hackernewsfetcher">
+<span class="md-ellipsis">
+      
+        HackerNewsFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#websearchfetcher">
+<span class="md-ellipsis">
+      
+        WebSearchFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#youtubefetcher">
+<span class="md-ellipsis">
+      
+        YouTubeFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#register_fetcher">
+<span class="md-ellipsis">
+      
+        register_fetcher()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_available_sources">
+<span class="md-ellipsis">
+      
+        get_available_sources()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_fetcher">
+<span class="md-ellipsis">
+      
+        get_fetcher()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fetch_all_articles">
+<span class="md-ellipsis">
+      
+        fetch_all_articles()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerchains">
+<span class="md-ellipsis">
+      
+        ai_blogger.chains
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.chains" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_llm">
+<span class="md-ellipsis">
+      
+        get_llm()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generate_candidates">
+<span class="md-ellipsis">
+      
+        generate_candidates()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#score_candidate">
+<span class="md-ellipsis">
+      
+        score_candidate()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#score_candidates">
+<span class="md-ellipsis">
+      
+        score_candidates()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#refine_winner">
+<span class="md-ellipsis">
+      
+        refine_winner()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerconfig">
+<span class="md-ellipsis">
+      
+        ai_blogger.config
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.config" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#constants">
+<span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#default-topics">
+<span class="md-ellipsis">
+      
+        Default Topics
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scoring-weights">
+<span class="md-ellipsis">
+      
+        Scoring Weights
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#source-defaults">
+<span class="md-ellipsis">
+      
+        Source Defaults
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerutils">
+<span class="md-ellipsis">
+      
+        ai_blogger.utils
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.utils" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#slugify">
+<span class="md-ellipsis">
+      
+        slugify()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_timestamp">
+<span class="md-ellipsis">
+      
+        get_timestamp()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_date_string">
+<span class="md-ellipsis">
+      
+        get_date_string()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generate_filename">
+<span class="md-ellipsis">
+      
+        generate_filename()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#package-exports">
+<span class="md-ellipsis">
+      
+        Package Exports
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfeedback_api">
+<span class="md-ellipsis">
+      
+        ai_blogger.feedback_api
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.feedback_api" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackservice">
+<span class="md-ellipsis">
+      
+        FeedbackService
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#approvalrequest">
+<span class="md-ellipsis">
+      
+        ApprovalRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rejectionrequest">
+<span class="md-ellipsis">
+      
+        RejectionRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#revisionrequest">
+<span class="md-ellipsis">
+      
+        RevisionRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackcategory">
+<span class="md-ellipsis">
+      
+        FeedbackCategory
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackrating">
+<span class="md-ellipsis">
+      
+        FeedbackRating
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackentry">
+<span class="md-ellipsis">
+      
+        FeedbackEntry
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackstats">
+<span class="md-ellipsis">
+      
+        FeedbackStats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackresponse">
+<span class="md-ellipsis">
+      
+        FeedbackResponse
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedback-learning-system">
+<span class="md-ellipsis">
+      
+        Feedback Learning System
+      
+    </span>
+</a>
+<nav aria-label="Feedback Learning System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#future-feedback-based-ranking">
+<span class="md-ellipsis">
+      
+        Future Feedback-Based Ranking
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfrontend_api">
+<span class="md-ellipsis">
+      
+        ai_blogger.frontend_api
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.frontend_api" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installation">
+<span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-start">
+<span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#create_app">
+<span class="md-ellipsis">
+      
+        create_app()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#router">
+<span class="md-ellipsis">
+      
+        router
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configure_services">
+<span class="md-ellipsis">
+      
+        configure_services()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-endpoints">
+<span class="md-ellipsis">
+      
+        API Endpoints
+      
+    </span>
+</a>
+<nav aria-label="API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#health-check">
+<span class="md-ellipsis">
+      
+        Health Check
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#job-management">
+<span class="md-ellipsis">
+      
+        Job Management
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#markdown-preview">
+<span class="md-ellipsis">
+      
+        Markdown Preview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#approval-workflow">
+<span class="md-ellipsis">
+      
+        Approval Workflow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedback-statistics">
+<span class="md-ellipsis">
+      
+        Feedback Statistics
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cors-configuration">
+<span class="md-ellipsis">
+      
+        CORS Configuration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-the-server">
+<span class="md-ellipsis">
+      
+        Running the Server
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#interactive-documentation">
+<span class="md-ellipsis">
+      
+        Interactive Documentation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-ui">
+<span class="md-ellipsis">
+      
+        Frontend UI
+      
+    </span>
+</a>
+<nav aria-label="Frontend UI" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-the-frontend">
+<span class="md-ellipsis">
+      
+        Building the Frontend
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-with-frontend">
+<span class="md-ellipsis">
+      
+        Running with Frontend
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-features">
+<span class="md-ellipsis">
+      
+        Frontend Features
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      
+        Development Mode
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../operations/">
+<span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../contributing/">
+<span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#module-overview">
+<span class="md-ellipsis">
+      
+        Module Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggermodels">
+<span class="md-ellipsis">
+      
+        ai_blogger.models
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.models" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#article">
+<span class="md-ellipsis">
+      
+        Article
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#candidatepost">
+<span class="md-ellipsis">
+      
+        CandidatePost
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#postscore">
+<span class="md-ellipsis">
+      
+        PostScore
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scoredpost">
+<span class="md-ellipsis">
+      
+        ScoredPost
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfetchers">
+<span class="md-ellipsis">
+      
+        ai_blogger.fetchers
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.fetchers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#basefetcher">
+<span class="md-ellipsis">
+      
+        BaseFetcher
+      
+    </span>
+</a>
+<nav aria-label="BaseFetcher" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#is_available">
+<span class="md-ellipsis">
+      
+        is_available()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fetch">
+<span class="md-ellipsis">
+      
+        fetch()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#hackernewsfetcher">
+<span class="md-ellipsis">
+      
+        HackerNewsFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#websearchfetcher">
+<span class="md-ellipsis">
+      
+        WebSearchFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#youtubefetcher">
+<span class="md-ellipsis">
+      
+        YouTubeFetcher
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#register_fetcher">
+<span class="md-ellipsis">
+      
+        register_fetcher()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_available_sources">
+<span class="md-ellipsis">
+      
+        get_available_sources()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_fetcher">
+<span class="md-ellipsis">
+      
+        get_fetcher()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fetch_all_articles">
+<span class="md-ellipsis">
+      
+        fetch_all_articles()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerchains">
+<span class="md-ellipsis">
+      
+        ai_blogger.chains
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.chains" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_llm">
+<span class="md-ellipsis">
+      
+        get_llm()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generate_candidates">
+<span class="md-ellipsis">
+      
+        generate_candidates()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#score_candidate">
+<span class="md-ellipsis">
+      
+        score_candidate()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#score_candidates">
+<span class="md-ellipsis">
+      
+        score_candidates()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#refine_winner">
+<span class="md-ellipsis">
+      
+        refine_winner()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerconfig">
+<span class="md-ellipsis">
+      
+        ai_blogger.config
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.config" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#constants">
+<span class="md-ellipsis">
+      
+        Constants
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#default-topics">
+<span class="md-ellipsis">
+      
+        Default Topics
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#scoring-weights">
+<span class="md-ellipsis">
+      
+        Scoring Weights
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#source-defaults">
+<span class="md-ellipsis">
+      
+        Source Defaults
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerutils">
+<span class="md-ellipsis">
+      
+        ai_blogger.utils
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.utils" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#slugify">
+<span class="md-ellipsis">
+      
+        slugify()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_timestamp">
+<span class="md-ellipsis">
+      
+        get_timestamp()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#get_date_string">
+<span class="md-ellipsis">
+      
+        get_date_string()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#generate_filename">
+<span class="md-ellipsis">
+      
+        generate_filename()
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#package-exports">
+<span class="md-ellipsis">
+      
+        Package Exports
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfeedback_api">
+<span class="md-ellipsis">
+      
+        ai_blogger.feedback_api
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.feedback_api" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackservice">
+<span class="md-ellipsis">
+      
+        FeedbackService
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#approvalrequest">
+<span class="md-ellipsis">
+      
+        ApprovalRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#rejectionrequest">
+<span class="md-ellipsis">
+      
+        RejectionRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#revisionrequest">
+<span class="md-ellipsis">
+      
+        RevisionRequest
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackcategory">
+<span class="md-ellipsis">
+      
+        FeedbackCategory
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackrating">
+<span class="md-ellipsis">
+      
+        FeedbackRating
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackentry">
+<span class="md-ellipsis">
+      
+        FeedbackEntry
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackstats">
+<span class="md-ellipsis">
+      
+        FeedbackStats
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedbackresponse">
+<span class="md-ellipsis">
+      
+        FeedbackResponse
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedback-learning-system">
+<span class="md-ellipsis">
+      
+        Feedback Learning System
+      
+    </span>
+</a>
+<nav aria-label="Feedback Learning System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#future-feedback-based-ranking">
+<span class="md-ellipsis">
+      
+        Future Feedback-Based Ranking
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ai_bloggerfrontend_api">
+<span class="md-ellipsis">
+      
+        ai_blogger.frontend_api
+      
+    </span>
+</a>
+<nav aria-label="ai_blogger.frontend_api" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#installation">
+<span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quick-start">
+<span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#create_app">
+<span class="md-ellipsis">
+      
+        create_app()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#router">
+<span class="md-ellipsis">
+      
+        router
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configure_services">
+<span class="md-ellipsis">
+      
+        configure_services()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-endpoints">
+<span class="md-ellipsis">
+      
+        API Endpoints
+      
+    </span>
+</a>
+<nav aria-label="API Endpoints" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#health-check">
+<span class="md-ellipsis">
+      
+        Health Check
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#job-management">
+<span class="md-ellipsis">
+      
+        Job Management
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#markdown-preview">
+<span class="md-ellipsis">
+      
+        Markdown Preview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#approval-workflow">
+<span class="md-ellipsis">
+      
+        Approval Workflow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#feedback-statistics">
+<span class="md-ellipsis">
+      
+        Feedback Statistics
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cors-configuration">
+<span class="md-ellipsis">
+      
+        CORS Configuration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-the-server">
+<span class="md-ellipsis">
+      
+        Running the Server
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#interactive-documentation">
+<span class="md-ellipsis">
+      
+        Interactive Documentation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-ui">
+<span class="md-ellipsis">
+      
+        Frontend UI
+      
+    </span>
+</a>
+<nav aria-label="Frontend UI" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#building-the-frontend">
+<span class="md-ellipsis">
+      
+        Building the Frontend
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#running-with-frontend">
+<span class="md-ellipsis">
+      
+        Running with Frontend
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#frontend-features">
+<span class="md-ellipsis">
+      
+        Frontend Features
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#development-mode">
+<span class="md-ellipsis">
+      
+        Development Mode
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="api-reference">API Reference</h1>
+<p>This document provides detailed documentation for the AI Blogger (Inker) Python modules and their public interfaces.</p>
+<h2 id="module-overview">Module Overview</h2>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Main["ai_blogger"]
+        INIT[__init__.py]
+        MAIN[__main__.py]
+    end
+
+    subgraph Core["Core Modules"]
+        FETCH[fetchers.py]
+        CHAINS[chains.py]
+        MODELS[models.py]
+        CONFIG[config.py]
+        UTILS[utils.py]
+    end
+
+    INIT --&gt; FETCH &amp; CHAINS &amp; MODELS &amp; CONFIG &amp; UTILS
+    MAIN --&gt; INIT</code></pre>
+<hr/>
+<h2 id="ai_bloggermodels">ai_blogger.models</h2>
+<p>Pydantic data models for the application.</p>
+<h3 id="article">Article</h3>
+<p>Represents a news article or video from various sources.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Article</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a>    <span class="n">url</span><span class="p">:</span> <span class="n">HttpUrl</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a>    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a>    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a>    <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a>    <span class="n">thumbnail</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>str</td>
+<td>Article title</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>HttpUrl</td>
+<td>Article URL</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>str</td>
+<td>Source identifier (e.g., "hacker_news", "youtube")</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td>str</td>
+<td>Article summary or description</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>str</td>
+<td>Topic the article was fetched for</td>
+</tr>
+<tr>
+<td><code>thumbnail</code></td>
+<td>Optional[str]</td>
+<td>Thumbnail URL (for videos)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Article</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="n">article</span> <span class="o">=</span> <span class="n">Article</span><span class="p">(</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"New AI Framework Released"</span><span class="p">,</span>
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a>    <span class="n">url</span><span class="o">=</span><span class="s2">"https://example.com/article"</span><span class="p">,</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a>    <span class="n">source</span><span class="o">=</span><span class="s2">"hacker_news"</span><span class="p">,</span>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a>    <span class="n">summary</span><span class="o">=</span><span class="s2">"A new AI framework..."</span><span class="p">,</span>
+<a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a>    <span class="n">topic</span><span class="o">=</span><span class="s2">"AI software engineering"</span><span class="p">,</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="candidatepost">CandidatePost</h3>
+<p>Represents a draft blog post candidate.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">CandidatePost</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a>    <span class="n">sources</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a>    <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>str</td>
+<td>Blog post title</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>str</td>
+<td>Full blog post content</td>
+</tr>
+<tr>
+<td><code>sources</code></td>
+<td>List[str]</td>
+<td>URLs of source articles used</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>str</td>
+<td>Primary topic of the post</td>
+</tr>
+</tbody>
+</table>
+<h3 id="postscore">PostScore</h3>
+<p>Scoring breakdown for a candidate post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-3-1" id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PostScore</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-3-2" id="__codelineno-3-2" name="__codelineno-3-2"></a>    <span class="n">relevance</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-3" id="__codelineno-3-3" name="__codelineno-3-3"></a>    <span class="n">originality</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-4" id="__codelineno-3-4" name="__codelineno-3-4"></a>    <span class="n">depth</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-5" id="__codelineno-3-5" name="__codelineno-3-5"></a>    <span class="n">clarity</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-6" id="__codelineno-3-6" name="__codelineno-3-6"></a>    <span class="n">engagement</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-7" id="__codelineno-3-7" name="__codelineno-3-7"></a>    <span class="n">total</span><span class="p">:</span> <span class="nb">float</span>
+<a href="#__codelineno-3-8" id="__codelineno-3-8" name="__codelineno-3-8"></a>    <span class="n">reasoning</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Attributes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>relevance</code></td>
+<td>float</td>
+<td>Relevance score (0-10)</td>
+</tr>
+<tr>
+<td><code>originality</code></td>
+<td>float</td>
+<td>Originality score (0-10)</td>
+</tr>
+<tr>
+<td><code>depth</code></td>
+<td>float</td>
+<td>Depth score (0-10)</td>
+</tr>
+<tr>
+<td><code>clarity</code></td>
+<td>float</td>
+<td>Clarity score (0-10)</td>
+</tr>
+<tr>
+<td><code>engagement</code></td>
+<td>float</td>
+<td>Engagement score (0-10)</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>float</td>
+<td>Weighted total score</td>
+</tr>
+<tr>
+<td><code>reasoning</code></td>
+<td>str</td>
+<td>Explanation of the scores</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scoredpost">ScoredPost</h3>
+<p>A candidate post with its score.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-4-1" id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ScoredPost</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-4-2" id="__codelineno-4-2" name="__codelineno-4-2"></a>    <span class="n">candidate</span><span class="p">:</span> <span class="n">CandidatePost</span>
+<a href="#__codelineno-4-3" id="__codelineno-4-3" name="__codelineno-4-3"></a>    <span class="n">score</span><span class="p">:</span> <span class="n">PostScore</span>
+</code></pre></div>
+<hr/>
+<h2 id="ai_bloggerfetchers">ai_blogger.fetchers</h2>
+<p>Modular fetcher architecture for news sources.</p>
+<h3 id="basefetcher">BaseFetcher</h3>
+<p>Abstract base class for all fetchers.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-5-1" id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">BaseFetcher</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a href="#__codelineno-5-2" id="__codelineno-5-2" name="__codelineno-5-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+<a href="#__codelineno-5-3" id="__codelineno-5-3" name="__codelineno-5-3"></a>    <span class="n">env_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-5-4" id="__codelineno-5-4" name="__codelineno-5-4"></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+<a href="#__codelineno-5-5" id="__codelineno-5-5" name="__codelineno-5-5"></a>
+<a href="#__codelineno-5-6" id="__codelineno-5-6" name="__codelineno-5-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-5-7" id="__codelineno-5-7" name="__codelineno-5-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_missing_key_message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-5-8" id="__codelineno-5-8" name="__codelineno-5-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_results</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-5-9" id="__codelineno-5-9" name="__codelineno-5-9"></a>
+<a href="#__codelineno-5-10" id="__codelineno-5-10" name="__codelineno-5-10"></a>    <span class="nd">@abstractmethod</span>
+<a href="#__codelineno-5-11" id="__codelineno-5-11" name="__codelineno-5-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_results</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Article</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Methods:</strong></p>
+<h4 id="is_available">is_available()</h4>
+<p>Check if this fetcher is available (has required API key).</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-6-1" id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+</code></pre></div>
+<p><strong>Returns:</strong> <code>True</code> if fetcher can be used, <code>False</code> otherwise.</p>
+<h4 id="fetch">fetch()</h4>
+<p>Fetch articles for a given topic.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-7-1" id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="nd">@abstractmethod</span>
+<a href="#__codelineno-7-2" id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_results</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Article</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>topic</code> (str): The topic to search for (must not be empty)</li>
+<li><code>max_results</code> (int): Maximum number of results (must be positive)</li>
+</ul>
+<p><strong>Returns:</strong> List of <code>Article</code> objects.</p>
+<p><strong>Raises:</strong> <code>ValueError</code> if inputs are invalid.</p>
+<h3 id="hackernewsfetcher">HackerNewsFetcher</h3>
+<p>Fetcher for Hacker News articles via Algolia API.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-8-1" id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="nd">@register_fetcher</span><span class="p">(</span><span class="s2">"hacker_news"</span><span class="p">)</span>
+<a href="#__codelineno-8-2" id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">HackerNewsFetcher</span><span class="p">(</span><span class="n">BaseFetcher</span><span class="p">):</span>
+<a href="#__codelineno-8-3" id="__codelineno-8-3" name="__codelineno-8-3"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">"hacker_news"</span>
+<a href="#__codelineno-8-4" id="__codelineno-8-4" name="__codelineno-8-4"></a>    <span class="n">env_key</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-8-5" id="__codelineno-8-5" name="__codelineno-8-5"></a>    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Fetch articles from Hacker News"</span>
+</code></pre></div>
+<p>No API key required.</p>
+<h3 id="websearchfetcher">WebSearchFetcher</h3>
+<p>Fetcher for web search results via Tavily API.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-9-1" id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="nd">@register_fetcher</span><span class="p">(</span><span class="s2">"web"</span><span class="p">)</span>
+<a href="#__codelineno-9-2" id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">WebSearchFetcher</span><span class="p">(</span><span class="n">BaseFetcher</span><span class="p">):</span>
+<a href="#__codelineno-9-3" id="__codelineno-9-3" name="__codelineno-9-3"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">"web"</span>
+<a href="#__codelineno-9-4" id="__codelineno-9-4" name="__codelineno-9-4"></a>    <span class="n">env_key</span> <span class="o">=</span> <span class="s2">"TAVILY_API_KEY"</span>
+<a href="#__codelineno-9-5" id="__codelineno-9-5" name="__codelineno-9-5"></a>    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Fetch articles from web search (Tavily)"</span>
+</code></pre></div>
+<p>Requires <code>TAVILY_API_KEY</code> environment variable.</p>
+<h3 id="youtubefetcher">YouTubeFetcher</h3>
+<p>Fetcher for trending YouTube videos via YouTube Data API v3.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="nd">@register_fetcher</span><span class="p">(</span><span class="s2">"youtube"</span><span class="p">)</span>
+<a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">YouTubeFetcher</span><span class="p">(</span><span class="n">BaseFetcher</span><span class="p">):</span>
+<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">"youtube"</span>
+<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a>    <span class="n">env_key</span> <span class="o">=</span> <span class="s2">"YOUTUBE_API_KEY"</span>
+<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a>    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Fetch trending YouTube videos"</span>
+</code></pre></div>
+<p>Requires <code>YOUTUBE_API_KEY</code> environment variable.</p>
+<h3 id="register_fetcher">register_fetcher()</h3>
+<p>Decorator to register a fetcher class.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-11-1" id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">register_fetcher</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Type</span><span class="p">[</span><span class="n">BaseFetcher</span><span class="p">]],</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseFetcher</span><span class="p">]]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>name</code> (str): The unique identifier for this fetcher</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-12-1" id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="nd">@register_fetcher</span><span class="p">(</span><span class="s2">"my_source"</span><span class="p">)</span>
+<a href="#__codelineno-12-2" id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MySourceFetcher</span><span class="p">(</span><span class="n">BaseFetcher</span><span class="p">):</span>
+<a href="#__codelineno-12-3" id="__codelineno-12-3" name="__codelineno-12-3"></a>    <span class="o">...</span>
+</code></pre></div>
+<h3 id="get_available_sources">get_available_sources()</h3>
+<p>Get list of all registered source names.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-13-1" id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_available_sources</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Returns:</strong> List of registered fetcher names.</p>
+<h3 id="get_fetcher">get_fetcher()</h3>
+<p>Get a fetcher instance by name.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-14-1" id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_fetcher</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseFetcher</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>name</code> (str): The fetcher name to retrieve</li>
+</ul>
+<p><strong>Returns:</strong> Fetcher instance or <code>None</code> if not found.</p>
+<h3 id="fetch_all_articles">fetch_all_articles()</h3>
+<p>Fetch articles from specified sources for the given topics.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-15-1" id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">fetch_all_articles</span><span class="p">(</span>
+<a href="#__codelineno-15-2" id="__codelineno-15-2" name="__codelineno-15-2"></a>    <span class="n">topics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-15-3" id="__codelineno-15-3" name="__codelineno-15-3"></a>    <span class="n">sources</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-15-4" id="__codelineno-15-4" name="__codelineno-15-4"></a>    <span class="n">max_results</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-15-5" id="__codelineno-15-5" name="__codelineno-15-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Article</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>topics</code> (Optional[List[str]]): List of topics to search for. Defaults to config topics.</li>
+<li><code>sources</code> (Optional[List[str]]): List of source names. Defaults to all sources.</li>
+<li><code>max_results</code> (Optional[Dict[str, int]]): Dict mapping source names to max results.</li>
+</ul>
+<p><strong>Returns:</strong> Combined list of <code>Article</code> objects from all sources.</p>
+<hr/>
+<h2 id="ai_bloggerchains">ai_blogger.chains</h2>
+<p>LangChain chains for content generation, scoring, and refinement.</p>
+<h3 id="get_llm">get_llm()</h3>
+<p>Get a configured LLM instance.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-16-1" id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_llm</span><span class="p">(</span><span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChatOpenAI</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>temperature</code> (float): The temperature setting for the LLM</li>
+</ul>
+<p><strong>Returns:</strong> Configured <code>ChatOpenAI</code> instance.</p>
+<h3 id="generate_candidates">generate_candidates()</h3>
+<p>Generate candidate blog posts from articles.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-17-1" id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_candidates</span><span class="p">(</span>
+<a href="#__codelineno-17-2" id="__codelineno-17-2" name="__codelineno-17-2"></a>    <span class="n">articles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Article</span><span class="p">],</span>
+<a href="#__codelineno-17-3" id="__codelineno-17-3" name="__codelineno-17-3"></a>    <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_NUM_CANDIDATES</span>
+<a href="#__codelineno-17-4" id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CandidatePost</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>articles</code> (List[Article]): List of Article objects to use as sources</li>
+<li><code>num_candidates</code> (int): Number of candidate posts to generate</li>
+</ul>
+<p><strong>Returns:</strong> List of <code>CandidatePost</code> objects.</p>
+<p><strong>Raises:</strong> <code>ValueError</code> if parsing fails.</p>
+<h3 id="score_candidate">score_candidate()</h3>
+<p>Score a candidate blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-18-1" id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">score_candidate</span><span class="p">(</span><span class="n">candidate</span><span class="p">:</span> <span class="n">CandidatePost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScoredPost</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>candidate</code> (CandidatePost): The CandidatePost to score</li>
+</ul>
+<p><strong>Returns:</strong> <code>ScoredPost</code> with scoring breakdown.</p>
+<h3 id="score_candidates">score_candidates()</h3>
+<p>Score all candidate posts.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-19-1" id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">score_candidates</span><span class="p">(</span><span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CandidatePost</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ScoredPost</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>candidates</code> (List[CandidatePost]): List of CandidatePost objects to score</li>
+</ul>
+<p><strong>Returns:</strong> List of <code>ScoredPost</code> objects, sorted by total score (descending).</p>
+<h3 id="refine_winner">refine_winner()</h3>
+<p>Refine and polish the winning blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-20-1" id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">refine_winner</span><span class="p">(</span><span class="n">winner</span><span class="p">:</span> <span class="n">ScoredPost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>winner</code> (ScoredPost): The winning ScoredPost to refine</li>
+</ul>
+<p><strong>Returns:</strong> The refined blog post content as Markdown.</p>
+<hr/>
+<h2 id="ai_bloggerconfig">ai_blogger.config</h2>
+<p>Configuration settings for the application.</p>
+<h3 id="constants">Constants</h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TOPICS</code></td>
+<td>List[str]</td>
+<td>See below</td>
+<td>Default search topics</td>
+</tr>
+<tr>
+<td><code>SCORING_WEIGHTS</code></td>
+<td>Dict[str, float]</td>
+<td>See below</td>
+<td>Scoring criteria weights</td>
+</tr>
+<tr>
+<td><code>WEIGHTS_TOLERANCE</code></td>
+<td>float</td>
+<td>0.001</td>
+<td>Floating-point tolerance</td>
+</tr>
+<tr>
+<td><code>YOUTUBE_MAX_AGE_DAYS</code></td>
+<td>int</td>
+<td>7</td>
+<td>Max age for YouTube videos</td>
+</tr>
+<tr>
+<td><code>DEFAULT_MAX_RESULTS</code></td>
+<td>int</td>
+<td>5</td>
+<td>Default results per source</td>
+</tr>
+<tr>
+<td><code>SOURCE_DEFAULTS</code></td>
+<td>Dict[str, int]</td>
+<td>See below</td>
+<td>Per-source result counts</td>
+</tr>
+<tr>
+<td><code>DEFAULT_NUM_CANDIDATES</code></td>
+<td>int</td>
+<td>3</td>
+<td>Number of candidates</td>
+</tr>
+<tr>
+<td><code>DEFAULT_OUTPUT_DIR</code></td>
+<td>str</td>
+<td>"./posts"</td>
+<td>Output directory</td>
+</tr>
+<tr>
+<td><code>LLM_MODEL_NAME</code></td>
+<td>str</td>
+<td>"gpt-4"</td>
+<td>OpenAI model name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="default-topics">Default Topics</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-21-1" id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="n">TOPICS</span> <span class="o">=</span> <span class="p">[</span>
+<a href="#__codelineno-21-2" id="__codelineno-21-2" name="__codelineno-21-2"></a>    <span class="s2">"AI software engineering"</span><span class="p">,</span>
+<a href="#__codelineno-21-3" id="__codelineno-21-3" name="__codelineno-21-3"></a>    <span class="s2">"agentic AI development"</span><span class="p">,</span>
+<a href="#__codelineno-21-4" id="__codelineno-21-4" name="__codelineno-21-4"></a>    <span class="s2">"Copilot coding assistants"</span><span class="p">,</span>
+<a href="#__codelineno-21-5" id="__codelineno-21-5" name="__codelineno-21-5"></a>    <span class="s2">"developer productivity"</span><span class="p">,</span>
+<a href="#__codelineno-21-6" id="__codelineno-21-6" name="__codelineno-21-6"></a>    <span class="s2">"software engineering leadership"</span><span class="p">,</span>
+<a href="#__codelineno-21-7" id="__codelineno-21-7" name="__codelineno-21-7"></a>    <span class="s2">"cybersecurity"</span><span class="p">,</span>
+<a href="#__codelineno-21-8" id="__codelineno-21-8" name="__codelineno-21-8"></a>    <span class="s2">"AI security"</span><span class="p">,</span>
+<a href="#__codelineno-21-9" id="__codelineno-21-9" name="__codelineno-21-9"></a>    <span class="s2">"dev tools"</span><span class="p">,</span>
+<a href="#__codelineno-21-10" id="__codelineno-21-10" name="__codelineno-21-10"></a>    <span class="s2">"cloud infrastructure"</span><span class="p">,</span>
+<a href="#__codelineno-21-11" id="__codelineno-21-11" name="__codelineno-21-11"></a><span class="p">]</span>
+</code></pre></div>
+<h3 id="scoring-weights">Scoring Weights</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-22-1" id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="n">SCORING_WEIGHTS</span> <span class="o">=</span> <span class="p">{</span>
+<a href="#__codelineno-22-2" id="__codelineno-22-2" name="__codelineno-22-2"></a>    <span class="s2">"relevance"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+<a href="#__codelineno-22-3" id="__codelineno-22-3" name="__codelineno-22-3"></a>    <span class="s2">"originality"</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+<a href="#__codelineno-22-4" id="__codelineno-22-4" name="__codelineno-22-4"></a>    <span class="s2">"depth"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+<a href="#__codelineno-22-5" id="__codelineno-22-5" name="__codelineno-22-5"></a>    <span class="s2">"clarity"</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+<a href="#__codelineno-22-6" id="__codelineno-22-6" name="__codelineno-22-6"></a>    <span class="s2">"engagement"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+<a href="#__codelineno-22-7" id="__codelineno-22-7" name="__codelineno-22-7"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="source-defaults">Source Defaults</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-23-1" id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="n">SOURCE_DEFAULTS</span> <span class="o">=</span> <span class="p">{</span>
+<a href="#__codelineno-23-2" id="__codelineno-23-2" name="__codelineno-23-2"></a>    <span class="s2">"hacker_news"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<a href="#__codelineno-23-3" id="__codelineno-23-3" name="__codelineno-23-3"></a>    <span class="s2">"web"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<a href="#__codelineno-23-4" id="__codelineno-23-4" name="__codelineno-23-4"></a>    <span class="s2">"youtube"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<a href="#__codelineno-23-5" id="__codelineno-23-5" name="__codelineno-23-5"></a><span class="p">}</span>
+</code></pre></div>
+<hr/>
+<h2 id="ai_bloggerutils">ai_blogger.utils</h2>
+<p>Utility functions.</p>
+<h3 id="slugify">slugify()</h3>
+<p>Convert text to a URL-friendly slug.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-24-1" id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">slugify</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>text</code> (str): The text to convert</li>
+<li><code>max_length</code> (int): Maximum length of the slug</li>
+</ul>
+<p><strong>Returns:</strong> A URL-friendly slug version of the text.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-25-1" id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">slugify</span><span class="p">(</span><span class="s2">"Hello World! 123"</span><span class="p">)</span>
+<a href="#__codelineno-25-2" id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="s1">'hello-world-123'</span>
+</code></pre></div>
+<h3 id="get_timestamp">get_timestamp()</h3>
+<p>Get the current timestamp in ISO format.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-26-1" id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_timestamp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Returns:</strong> Current timestamp as a string.</p>
+<h3 id="get_date_string">get_date_string()</h3>
+<p>Get the current date as a string for filenames.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-27-1" id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_date_string</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Returns:</strong> Current date in <code>YYYY-MM-DD</code> format.</p>
+<h3 id="generate_filename">generate_filename()</h3>
+<p>Generate a filename for a blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-28-1" id="__codelineno-28-1" name="__codelineno-28-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">generate_filename</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>title</code> (str): The title of the blog post</li>
+</ul>
+<p><strong>Returns:</strong> A filename in the format <code>YYYY-MM-DD-slug.md</code>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-29-1" id="__codelineno-29-1" name="__codelineno-29-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">generate_filename</span><span class="p">(</span><span class="s2">"My Blog Post Title"</span><span class="p">)</span>
+<a href="#__codelineno-29-2" id="__codelineno-29-2" name="__codelineno-29-2"></a><span class="s1">'2024-01-15-my-blog-post-title.md'</span>
+</code></pre></div>
+<hr/>
+<h2 id="package-exports">Package Exports</h2>
+<p>The main <code>ai_blogger</code> package exports the following:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-30-1" id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a href="#__codelineno-30-2" id="__codelineno-30-2" name="__codelineno-30-2"></a>    <span class="c1"># Configuration</span>
+<a href="#__codelineno-30-3" id="__codelineno-30-3" name="__codelineno-30-3"></a>    <span class="n">TOPICS</span><span class="p">,</span>
+<a href="#__codelineno-30-4" id="__codelineno-30-4" name="__codelineno-30-4"></a>
+<a href="#__codelineno-30-5" id="__codelineno-30-5" name="__codelineno-30-5"></a>    <span class="c1"># Models</span>
+<a href="#__codelineno-30-6" id="__codelineno-30-6" name="__codelineno-30-6"></a>    <span class="n">Article</span><span class="p">,</span>
+<a href="#__codelineno-30-7" id="__codelineno-30-7" name="__codelineno-30-7"></a>    <span class="n">CandidatePost</span><span class="p">,</span>
+<a href="#__codelineno-30-8" id="__codelineno-30-8" name="__codelineno-30-8"></a>    <span class="n">PostScore</span><span class="p">,</span>
+<a href="#__codelineno-30-9" id="__codelineno-30-9" name="__codelineno-30-9"></a>    <span class="n">ScoredPost</span><span class="p">,</span>
+<a href="#__codelineno-30-10" id="__codelineno-30-10" name="__codelineno-30-10"></a>
+<a href="#__codelineno-30-11" id="__codelineno-30-11" name="__codelineno-30-11"></a>    <span class="c1"># Fetchers</span>
+<a href="#__codelineno-30-12" id="__codelineno-30-12" name="__codelineno-30-12"></a>    <span class="n">BaseFetcher</span><span class="p">,</span>
+<a href="#__codelineno-30-13" id="__codelineno-30-13" name="__codelineno-30-13"></a>    <span class="n">register_fetcher</span><span class="p">,</span>
+<a href="#__codelineno-30-14" id="__codelineno-30-14" name="__codelineno-30-14"></a>    <span class="n">get_available_sources</span><span class="p">,</span>
+<a href="#__codelineno-30-15" id="__codelineno-30-15" name="__codelineno-30-15"></a>    <span class="n">get_fetcher</span><span class="p">,</span>
+<a href="#__codelineno-30-16" id="__codelineno-30-16" name="__codelineno-30-16"></a>    <span class="n">fetch_all_articles</span><span class="p">,</span>
+<a href="#__codelineno-30-17" id="__codelineno-30-17" name="__codelineno-30-17"></a>
+<a href="#__codelineno-30-18" id="__codelineno-30-18" name="__codelineno-30-18"></a>    <span class="c1"># Feedback API</span>
+<a href="#__codelineno-30-19" id="__codelineno-30-19" name="__codelineno-30-19"></a>    <span class="n">FeedbackService</span><span class="p">,</span>
+<a href="#__codelineno-30-20" id="__codelineno-30-20" name="__codelineno-30-20"></a>    <span class="n">ApprovalRequest</span><span class="p">,</span>
+<a href="#__codelineno-30-21" id="__codelineno-30-21" name="__codelineno-30-21"></a>    <span class="n">RejectionRequest</span><span class="p">,</span>
+<a href="#__codelineno-30-22" id="__codelineno-30-22" name="__codelineno-30-22"></a>    <span class="n">RevisionRequest</span><span class="p">,</span>
+<a href="#__codelineno-30-23" id="__codelineno-30-23" name="__codelineno-30-23"></a>    <span class="n">FeedbackCategory</span><span class="p">,</span>
+<a href="#__codelineno-30-24" id="__codelineno-30-24" name="__codelineno-30-24"></a>    <span class="n">FeedbackRating</span><span class="p">,</span>
+<a href="#__codelineno-30-25" id="__codelineno-30-25" name="__codelineno-30-25"></a>    <span class="n">FeedbackEntry</span><span class="p">,</span>
+<a href="#__codelineno-30-26" id="__codelineno-30-26" name="__codelineno-30-26"></a>    <span class="n">FeedbackStats</span><span class="p">,</span>
+<a href="#__codelineno-30-27" id="__codelineno-30-27" name="__codelineno-30-27"></a>    <span class="n">FeedbackResponse</span><span class="p">,</span>
+<a href="#__codelineno-30-28" id="__codelineno-30-28" name="__codelineno-30-28"></a>
+<a href="#__codelineno-30-29" id="__codelineno-30-29" name="__codelineno-30-29"></a>    <span class="c1"># Utilities</span>
+<a href="#__codelineno-30-30" id="__codelineno-30-30" name="__codelineno-30-30"></a>    <span class="n">slugify</span><span class="p">,</span>
+<a href="#__codelineno-30-31" id="__codelineno-30-31" name="__codelineno-30-31"></a>    <span class="n">get_timestamp</span><span class="p">,</span>
+<a href="#__codelineno-30-32" id="__codelineno-30-32" name="__codelineno-30-32"></a>    <span class="n">get_date_string</span><span class="p">,</span>
+<a href="#__codelineno-30-33" id="__codelineno-30-33" name="__codelineno-30-33"></a>    <span class="n">generate_filename</span><span class="p">,</span>
+<a href="#__codelineno-30-34" id="__codelineno-30-34" name="__codelineno-30-34"></a><span class="p">)</span>
+</code></pre></div>
+<hr/>
+<h2 id="ai_bloggerfeedback_api">ai_blogger.feedback_api</h2>
+<p>The Feedback API provides structured endpoints for blog post approval, rejection, and editorial feedback. It is designed to support learning from editorial outcomes.</p>
+<h3 id="feedbackservice">FeedbackService</h3>
+<p>Service for managing blog post feedback and approvals.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-31-1" id="__codelineno-31-1" name="__codelineno-31-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedbackService</span><span class="p">:</span>
+<a href="#__codelineno-31-2" id="__codelineno-31-2" name="__codelineno-31-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage</span><span class="p">:</span> <span class="n">StorageBackend</span><span class="p">):</span>
+<a href="#__codelineno-31-3" id="__codelineno-31-3" name="__codelineno-31-3"></a><span class="w">        </span><span class="sd">"""Initialize with a storage backend."""</span>
+<a href="#__codelineno-31-4" id="__codelineno-31-4" name="__codelineno-31-4"></a>
+<a href="#__codelineno-31-5" id="__codelineno-31-5" name="__codelineno-31-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">approve_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">ApprovalRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeedbackResponse</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-31-6" id="__codelineno-31-6" name="__codelineno-31-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">reject_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">RejectionRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeedbackResponse</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-31-7" id="__codelineno-31-7" name="__codelineno-31-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">request_revision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">RevisionRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeedbackResponse</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-31-8" id="__codelineno-31-8" name="__codelineno-31-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_post_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackEntry</span><span class="p">]:</span> <span class="o">...</span>
+<a href="#__codelineno-31-9" id="__codelineno-31-9" name="__codelineno-31-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FeedbackStats</span><span class="p">:</span> <span class="o">...</span>
+<a href="#__codelineno-31-10" id="__codelineno-31-10" name="__codelineno-31-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_learning_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-32-1" id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackService</span><span class="p">,</span> <span class="n">ApprovalRequest</span><span class="p">,</span> <span class="n">create_storage</span>
+<a href="#__codelineno-32-2" id="__codelineno-32-2" name="__codelineno-32-2"></a>
+<a href="#__codelineno-32-3" id="__codelineno-32-3" name="__codelineno-32-3"></a><span class="n">storage</span> <span class="o">=</span> <span class="n">create_storage</span><span class="p">()</span>
+<a href="#__codelineno-32-4" id="__codelineno-32-4" name="__codelineno-32-4"></a><span class="n">feedback_service</span> <span class="o">=</span> <span class="n">FeedbackService</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
+<a href="#__codelineno-32-5" id="__codelineno-32-5" name="__codelineno-32-5"></a>
+<a href="#__codelineno-32-6" id="__codelineno-32-6" name="__codelineno-32-6"></a><span class="c1"># Approve a post</span>
+<a href="#__codelineno-32-7" id="__codelineno-32-7" name="__codelineno-32-7"></a><span class="n">response</span> <span class="o">=</span> <span class="n">feedback_service</span><span class="o">.</span><span class="n">approve_post</span><span class="p">(</span><span class="n">ApprovalRequest</span><span class="p">(</span>
+<a href="#__codelineno-32-8" id="__codelineno-32-8" name="__codelineno-32-8"></a>    <span class="n">post_id</span><span class="o">=</span><span class="s2">"post-123"</span><span class="p">,</span>
+<a href="#__codelineno-32-9" id="__codelineno-32-9" name="__codelineno-32-9"></a>    <span class="n">feedback</span><span class="o">=</span><span class="s2">"Excellent content!"</span><span class="p">,</span>
+<a href="#__codelineno-32-10" id="__codelineno-32-10" name="__codelineno-32-10"></a>    <span class="n">actor</span><span class="o">=</span><span class="s2">"reviewer-1"</span><span class="p">,</span>
+<a href="#__codelineno-32-11" id="__codelineno-32-11" name="__codelineno-32-11"></a><span class="p">))</span>
+<a href="#__codelineno-32-12" id="__codelineno-32-12" name="__codelineno-32-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Post approved: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">success</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="approvalrequest">ApprovalRequest</h3>
+<p>Request to approve a blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-33-1" id="__codelineno-33-1" name="__codelineno-33-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ApprovalRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-33-2" id="__codelineno-33-2" name="__codelineno-33-2"></a>    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-33-3" id="__codelineno-33-3" name="__codelineno-33-3"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-33-4" id="__codelineno-33-4" name="__codelineno-33-4"></a>    <span class="n">ratings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackRating</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-33-5" id="__codelineno-33-5" name="__codelineno-33-5"></a>    <span class="n">actor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<h3 id="rejectionrequest">RejectionRequest</h3>
+<p>Request to reject a blog post. Feedback is required.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-34-1" id="__codelineno-34-1" name="__codelineno-34-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RejectionRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-34-2" id="__codelineno-34-2" name="__codelineno-34-2"></a>    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-34-3" id="__codelineno-34-3" name="__codelineno-34-3"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Required</span>
+<a href="#__codelineno-34-4" id="__codelineno-34-4" name="__codelineno-34-4"></a>    <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackCategory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-34-5" id="__codelineno-34-5" name="__codelineno-34-5"></a>    <span class="n">ratings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackRating</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-34-6" id="__codelineno-34-6" name="__codelineno-34-6"></a>    <span class="n">actor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<h3 id="revisionrequest">RevisionRequest</h3>
+<p>Request revision for a blog post. Feedback is required.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-35-1" id="__codelineno-35-1" name="__codelineno-35-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RevisionRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-35-2" id="__codelineno-35-2" name="__codelineno-35-2"></a>    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-35-3" id="__codelineno-35-3" name="__codelineno-35-3"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Required</span>
+<a href="#__codelineno-35-4" id="__codelineno-35-4" name="__codelineno-35-4"></a>    <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackCategory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-35-5" id="__codelineno-35-5" name="__codelineno-35-5"></a>    <span class="n">ratings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackRating</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-35-6" id="__codelineno-35-6" name="__codelineno-35-6"></a>    <span class="n">actor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<h3 id="feedbackcategory">FeedbackCategory</h3>
+<p>Categories for classifying editorial feedback.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QUALITY</td>
+<td>"quality"</td>
+<td>Overall quality issues</td>
+</tr>
+<tr>
+<td>RELEVANCE</td>
+<td>"relevance"</td>
+<td>Topic/content relevance</td>
+</tr>
+<tr>
+<td>ACCURACY</td>
+<td>"accuracy"</td>
+<td>Factual accuracy concerns</td>
+</tr>
+<tr>
+<td>CLARITY</td>
+<td>"clarity"</td>
+<td>Writing clarity issues</td>
+</tr>
+<tr>
+<td>ENGAGEMENT</td>
+<td>"engagement"</td>
+<td>Reader engagement concerns</td>
+</tr>
+<tr>
+<td>LENGTH</td>
+<td>"length"</td>
+<td>Content length issues</td>
+</tr>
+<tr>
+<td>STYLE</td>
+<td>"style"</td>
+<td>Writing style feedback</td>
+</tr>
+<tr>
+<td>SOURCES</td>
+<td>"sources"</td>
+<td>Source quality/citation issues</td>
+</tr>
+<tr>
+<td>OTHER</td>
+<td>"other"</td>
+<td>Miscellaneous feedback</td>
+</tr>
+</tbody>
+</table>
+<h3 id="feedbackrating">FeedbackRating</h3>
+<p>Structured rating for a specific aspect of a blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-36-1" id="__codelineno-36-1" name="__codelineno-36-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedbackRating</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-36-2" id="__codelineno-36-2" name="__codelineno-36-2"></a>    <span class="n">category</span><span class="p">:</span> <span class="n">FeedbackCategory</span>
+<a href="#__codelineno-36-3" id="__codelineno-36-3" name="__codelineno-36-3"></a>    <span class="n">score</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># 1-5 scale (1=poor, 5=excellent)</span>
+<a href="#__codelineno-36-4" id="__codelineno-36-4" name="__codelineno-36-4"></a>    <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-37-1" id="__codelineno-37-1" name="__codelineno-37-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackRating</span><span class="p">,</span> <span class="n">FeedbackCategory</span>
+<a href="#__codelineno-37-2" id="__codelineno-37-2" name="__codelineno-37-2"></a>
+<a href="#__codelineno-37-3" id="__codelineno-37-3" name="__codelineno-37-3"></a><span class="n">rating</span> <span class="o">=</span> <span class="n">FeedbackRating</span><span class="p">(</span>
+<a href="#__codelineno-37-4" id="__codelineno-37-4" name="__codelineno-37-4"></a>    <span class="n">category</span><span class="o">=</span><span class="n">FeedbackCategory</span><span class="o">.</span><span class="n">QUALITY</span><span class="p">,</span>
+<a href="#__codelineno-37-5" id="__codelineno-37-5" name="__codelineno-37-5"></a>    <span class="n">score</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<a href="#__codelineno-37-6" id="__codelineno-37-6" name="__codelineno-37-6"></a>    <span class="n">comment</span><span class="o">=</span><span class="s2">"Good overall quality, minor improvements needed"</span><span class="p">,</span>
+<a href="#__codelineno-37-7" id="__codelineno-37-7" name="__codelineno-37-7"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="feedbackentry">FeedbackEntry</h3>
+<p>A feedback entry capturing editorial input for learning.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-38-1" id="__codelineno-38-1" name="__codelineno-38-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedbackEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-38-2" id="__codelineno-38-2" name="__codelineno-38-2"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-38-3" id="__codelineno-38-3" name="__codelineno-38-3"></a>    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-38-4" id="__codelineno-38-4" name="__codelineno-38-4"></a>    <span class="n">job_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-5" id="__codelineno-38-5" name="__codelineno-38-5"></a>    <span class="n">action</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># "approved", "rejected", "revision_requested"</span>
+<a href="#__codelineno-38-6" id="__codelineno-38-6" name="__codelineno-38-6"></a>    <span class="n">feedback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-7" id="__codelineno-38-7" name="__codelineno-38-7"></a>    <span class="n">categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackCategory</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-38-8" id="__codelineno-38-8" name="__codelineno-38-8"></a>    <span class="n">ratings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FeedbackRating</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-38-9" id="__codelineno-38-9" name="__codelineno-38-9"></a>    <span class="n">actor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-10" id="__codelineno-38-10" name="__codelineno-38-10"></a>    <span class="n">post_scoring</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-11" id="__codelineno-38-11" name="__codelineno-38-11"></a>    <span class="n">post_topic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-12" id="__codelineno-38-12" name="__codelineno-38-12"></a>    <span class="n">post_word_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-38-13" id="__codelineno-38-13" name="__codelineno-38-13"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n">datetime</span>
+</code></pre></div>
+<h3 id="feedbackstats">FeedbackStats</h3>
+<p>Aggregated feedback statistics for learning.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-39-1" id="__codelineno-39-1" name="__codelineno-39-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedbackStats</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-39-2" id="__codelineno-39-2" name="__codelineno-39-2"></a>    <span class="n">total_feedback</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="#__codelineno-39-3" id="__codelineno-39-3" name="__codelineno-39-3"></a>    <span class="n">approvals</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="#__codelineno-39-4" id="__codelineno-39-4" name="__codelineno-39-4"></a>    <span class="n">rejections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="#__codelineno-39-5" id="__codelineno-39-5" name="__codelineno-39-5"></a>    <span class="n">revisions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="#__codelineno-39-6" id="__codelineno-39-6" name="__codelineno-39-6"></a>    <span class="n">approval_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-7" id="__codelineno-39-7" name="__codelineno-39-7"></a>    <span class="n">avg_quality_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-8" id="__codelineno-39-8" name="__codelineno-39-8"></a>    <span class="n">avg_relevance_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-9" id="__codelineno-39-9" name="__codelineno-39-9"></a>    <span class="n">avg_clarity_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-10" id="__codelineno-39-10" name="__codelineno-39-10"></a>    <span class="n">avg_engagement_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-11" id="__codelineno-39-11" name="__codelineno-39-11"></a>    <span class="n">common_rejection_categories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<a href="#__codelineno-39-12" id="__codelineno-39-12" name="__codelineno-39-12"></a>    <span class="n">avg_time_to_decision_hours</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<a href="#__codelineno-39-13" id="__codelineno-39-13" name="__codelineno-39-13"></a>    <span class="n">feedback_by_topic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+</code></pre></div>
+<h3 id="feedbackresponse">FeedbackResponse</h3>
+<p>Response after providing feedback on a blog post.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-40-1" id="__codelineno-40-1" name="__codelineno-40-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">FeedbackResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a href="#__codelineno-40-2" id="__codelineno-40-2" name="__codelineno-40-2"></a>    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span>
+<a href="#__codelineno-40-3" id="__codelineno-40-3" name="__codelineno-40-3"></a>    <span class="n">post_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-40-4" id="__codelineno-40-4" name="__codelineno-40-4"></a>    <span class="n">new_status</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-40-5" id="__codelineno-40-5" name="__codelineno-40-5"></a>    <span class="n">feedback_id</span><span class="p">:</span> <span class="nb">str</span>
+<a href="#__codelineno-40-6" id="__codelineno-40-6" name="__codelineno-40-6"></a>    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div>
+<hr/>
+<h2 id="feedback-learning-system">Feedback Learning System</h2>
+<p>The Feedback API is designed to support learning from editorial outcomes. The <code>get_learning_data()</code> method returns structured data suitable for training or refining content generation algorithms.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-41-1" id="__codelineno-41-1" name="__codelineno-41-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeedbackService</span><span class="p">,</span> <span class="n">create_storage</span>
+<a href="#__codelineno-41-2" id="__codelineno-41-2" name="__codelineno-41-2"></a>
+<a href="#__codelineno-41-3" id="__codelineno-41-3" name="__codelineno-41-3"></a><span class="n">storage</span> <span class="o">=</span> <span class="n">create_storage</span><span class="p">()</span>
+<a href="#__codelineno-41-4" id="__codelineno-41-4" name="__codelineno-41-4"></a><span class="n">feedback_service</span> <span class="o">=</span> <span class="n">FeedbackService</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
+<a href="#__codelineno-41-5" id="__codelineno-41-5" name="__codelineno-41-5"></a>
+<a href="#__codelineno-41-6" id="__codelineno-41-6" name="__codelineno-41-6"></a><span class="c1"># Get learning data from past decisions</span>
+<a href="#__codelineno-41-7" id="__codelineno-41-7" name="__codelineno-41-7"></a><span class="n">learning_data</span> <span class="o">=</span> <span class="n">feedback_service</span><span class="o">.</span><span class="n">get_learning_data</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a href="#__codelineno-41-8" id="__codelineno-41-8" name="__codelineno-41-8"></a>
+<a href="#__codelineno-41-9" id="__codelineno-41-9" name="__codelineno-41-9"></a><span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">learning_data</span><span class="p">:</span>
+<a href="#__codelineno-41-10" id="__codelineno-41-10" name="__codelineno-41-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Post: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-41-11" id="__codelineno-41-11" name="__codelineno-41-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Topic: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'topic'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-41-12" id="__codelineno-41-12" name="__codelineno-41-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Outcome: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'outcome'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># 'approved' or 'rejected'</span>
+<a href="#__codelineno-41-13" id="__codelineno-41-13" name="__codelineno-41-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Feedback: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'feedback'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-41-14" id="__codelineno-41-14" name="__codelineno-41-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Scoring: </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'scoring'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a href="#__codelineno-41-15" id="__codelineno-41-15" name="__codelineno-41-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"---"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="future-feedback-based-ranking">Future Feedback-Based Ranking</h3>
+<p>The feedback data can be used to:</p>
+<ol>
+<li><strong>Train ranking models</strong>: Use approval/rejection patterns to improve candidate scoring</li>
+<li><strong>Topic preference learning</strong>: Identify which topics have higher approval rates</li>
+<li><strong>Content style optimization</strong>: Learn from feedback categories to improve content generation</li>
+<li><strong>Reviewer calibration</strong>: Track reviewer patterns for consistency</li>
+</ol>
+<hr/>
+<h2 id="ai_bloggerfrontend_api">ai_blogger.frontend_api</h2>
+<p>The Frontend API provides RESTful HTTP endpoints for frontend clients to interact with the AI Blogger system. Built on FastAPI, it offers a complete API for job management, content preview, and approval workflows.</p>
+<h3 id="installation">Installation</h3>
+<p>The Frontend API requires additional dependencies:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-42-1" id="__codelineno-42-1" name="__codelineno-42-1"></a>pip<span class="w"> </span>install<span class="w"> </span>ai-blogger<span class="o">[</span>api<span class="o">]</span>
+</code></pre></div>
+<p>This installs FastAPI and Uvicorn for running the API server.</p>
+<h3 id="quick-start">Quick Start</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-43-1" id="__codelineno-43-1" name="__codelineno-43-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+<a href="#__codelineno-43-2" id="__codelineno-43-2" name="__codelineno-43-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+<a href="#__codelineno-43-3" id="__codelineno-43-3" name="__codelineno-43-3"></a>
+<a href="#__codelineno-43-4" id="__codelineno-43-4" name="__codelineno-43-4"></a><span class="c1"># Create and run the API</span>
+<a href="#__codelineno-43-5" id="__codelineno-43-5" name="__codelineno-43-5"></a><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+<a href="#__codelineno-43-6" id="__codelineno-43-6" name="__codelineno-43-6"></a><span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</code></pre></div>
+<p>Or use the router in an existing FastAPI app:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-44-1" id="__codelineno-44-1" name="__codelineno-44-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<a href="#__codelineno-44-2" id="__codelineno-44-2" name="__codelineno-44-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+<a href="#__codelineno-44-3" id="__codelineno-44-3" name="__codelineno-44-3"></a>
+<a href="#__codelineno-44-4" id="__codelineno-44-4" name="__codelineno-44-4"></a><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+<a href="#__codelineno-44-5" id="__codelineno-44-5" name="__codelineno-44-5"></a><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"/api"</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="create_app">create_app()</h3>
+<p>Factory function to create a configured FastAPI application.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-45-1" id="__codelineno-45-1" name="__codelineno-45-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">(</span>
+<a href="#__codelineno-45-2" id="__codelineno-45-2" name="__codelineno-45-2"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"AI Blogger Frontend API"</span><span class="p">,</span>
+<a href="#__codelineno-45-3" id="__codelineno-45-3" name="__codelineno-45-3"></a>    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"RESTful API for AI Blogger job management and content workflow"</span><span class="p">,</span>
+<a href="#__codelineno-45-4" id="__codelineno-45-4" name="__codelineno-45-4"></a>    <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+<a href="#__codelineno-45-5" id="__codelineno-45-5" name="__codelineno-45-5"></a>    <span class="n">cors_origins</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-45-6" id="__codelineno-45-6" name="__codelineno-45-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FastAPI</span>
+</code></pre></div>
+<p><strong>Args:</strong></p>
+<ul>
+<li><code>title</code> (str): API title for documentation.</li>
+<li><code>description</code> (str): API description.</li>
+<li><code>version</code> (str): API version.</li>
+<li><code>cors_origins</code> (Optional[List[str]]): CORS allowed origins. Defaults to <code>["*"]</code>.</li>
+</ul>
+<p><strong>Returns:</strong> Configured FastAPI application.</p>
+<h3 id="router">router</h3>
+<p>Pre-configured FastAPI APIRouter with all endpoints.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-46-1" id="__codelineno-46-1" name="__codelineno-46-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+</code></pre></div>
+<h3 id="configure_services">configure_services()</h3>
+<p>Configure custom service instances for dependency injection.</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-47-1" id="__codelineno-47-1" name="__codelineno-47-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_services</span><span class="p">(</span>
+<a href="#__codelineno-47-2" id="__codelineno-47-2" name="__codelineno-47-2"></a>    <span class="n">job_service</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">JobService</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-47-3" id="__codelineno-47-3" name="__codelineno-47-3"></a>    <span class="n">feedback_service</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FeedbackService</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-47-4" id="__codelineno-47-4" name="__codelineno-47-4"></a>    <span class="n">storage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">StorageBackend</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a href="#__codelineno-47-5" id="__codelineno-47-5" name="__codelineno-47-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-48-1" id="__codelineno-48-1" name="__codelineno-48-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ai_blogger</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_services</span><span class="p">,</span> <span class="n">JobService</span><span class="p">,</span> <span class="n">FeedbackService</span><span class="p">,</span> <span class="n">create_storage</span>
+<a href="#__codelineno-48-2" id="__codelineno-48-2" name="__codelineno-48-2"></a>
+<a href="#__codelineno-48-3" id="__codelineno-48-3" name="__codelineno-48-3"></a><span class="c1"># Custom configuration</span>
+<a href="#__codelineno-48-4" id="__codelineno-48-4" name="__codelineno-48-4"></a><span class="n">storage</span> <span class="o">=</span> <span class="n">create_storage</span><span class="p">(</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="n">connection_string</span><span class="o">=</span><span class="s2">"postgresql://..."</span><span class="p">)</span>
+<a href="#__codelineno-48-5" id="__codelineno-48-5" name="__codelineno-48-5"></a><span class="n">job_service</span> <span class="o">=</span> <span class="n">JobService</span><span class="p">(</span><span class="s2">"/custom/jobs/dir"</span><span class="p">)</span>
+<a href="#__codelineno-48-6" id="__codelineno-48-6" name="__codelineno-48-6"></a><span class="n">feedback_service</span> <span class="o">=</span> <span class="n">FeedbackService</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
+<a href="#__codelineno-48-7" id="__codelineno-48-7" name="__codelineno-48-7"></a>
+<a href="#__codelineno-48-8" id="__codelineno-48-8" name="__codelineno-48-8"></a><span class="n">configure_services</span><span class="p">(</span>
+<a href="#__codelineno-48-9" id="__codelineno-48-9" name="__codelineno-48-9"></a>    <span class="n">job_service</span><span class="o">=</span><span class="n">job_service</span><span class="p">,</span>
+<a href="#__codelineno-48-10" id="__codelineno-48-10" name="__codelineno-48-10"></a>    <span class="n">feedback_service</span><span class="o">=</span><span class="n">feedback_service</span><span class="p">,</span>
+<a href="#__codelineno-48-11" id="__codelineno-48-11" name="__codelineno-48-11"></a>    <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span>
+<a href="#__codelineno-48-12" id="__codelineno-48-12" name="__codelineno-48-12"></a><span class="p">)</span>
+</code></pre></div>
+<h3 id="api-endpoints">API Endpoints</h3>
+<h4 id="health-check">Health Check</h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/health</code></td>
+<td>Check API and service health</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-49-1" id="__codelineno-49-1" name="__codelineno-49-1"></a><span class="p">{</span>
+<a href="#__codelineno-49-2" id="__codelineno-49-2" name="__codelineno-49-2"></a><span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"healthy"</span><span class="p">,</span>
+<a href="#__codelineno-49-3" id="__codelineno-49-3" name="__codelineno-49-3"></a><span class="w">  </span><span class="nt">"job_service"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-49-4" id="__codelineno-49-4" name="__codelineno-49-4"></a><span class="w">  </span><span class="nt">"feedback_service"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-49-5" id="__codelineno-49-5" name="__codelineno-49-5"></a><span class="w">  </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a href="#__codelineno-49-6" id="__codelineno-49-6" name="__codelineno-49-6"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="job-management">Job Management</h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/jobs</code></td>
+<td>Submit a new job</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/jobs</code></td>
+<td>List all jobs</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/jobs/{job_id}</code></td>
+<td>Get job status</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/jobs/correlation/{correlation_id}</code></td>
+<td>Get job by correlation ID</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/api/jobs/{job_id}</code></td>
+<td>Delete a job</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/jobs/{job_id}/execute</code></td>
+<td>Execute a pending job</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Submit Job Request:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-50-1" id="__codelineno-50-1" name="__codelineno-50-1"></a><span class="p">{</span>
+<a href="#__codelineno-50-2" id="__codelineno-50-2" name="__codelineno-50-2"></a><span class="w">  </span><span class="nt">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AI"</span><span class="p">,</span><span class="w"> </span><span class="s2">"machine learning"</span><span class="p">],</span>
+<a href="#__codelineno-50-3" id="__codelineno-50-3" name="__codelineno-50-3"></a><span class="w">  </span><span class="nt">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"hacker_news"</span><span class="p">,</span><span class="w"> </span><span class="s2">"youtube"</span><span class="p">],</span>
+<a href="#__codelineno-50-4" id="__codelineno-50-4" name="__codelineno-50-4"></a><span class="w">  </span><span class="nt">"num_candidates"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a href="#__codelineno-50-5" id="__codelineno-50-5" name="__codelineno-50-5"></a><span class="w">  </span><span class="nt">"max_results"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"hacker_news"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"youtube"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">},</span>
+<a href="#__codelineno-50-6" id="__codelineno-50-6" name="__codelineno-50-6"></a><span class="w">  </span><span class="nt">"correlation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unique-request-id"</span>
+<a href="#__codelineno-50-7" id="__codelineno-50-7" name="__codelineno-50-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Submit Job Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-51-1" id="__codelineno-51-1" name="__codelineno-51-1"></a><span class="p">{</span>
+<a href="#__codelineno-51-2" id="__codelineno-51-2" name="__codelineno-51-2"></a><span class="w">  </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"550e8400-e29b-41d4-a716-446655440000"</span><span class="p">,</span>
+<a href="#__codelineno-51-3" id="__codelineno-51-3" name="__codelineno-51-3"></a><span class="w">  </span><span class="nt">"correlation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unique-request-id"</span><span class="p">,</span>
+<a href="#__codelineno-51-4" id="__codelineno-51-4" name="__codelineno-51-4"></a><span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pending"</span><span class="p">,</span>
+<a href="#__codelineno-51-5" id="__codelineno-51-5" name="__codelineno-51-5"></a><span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job submitted successfully"</span><span class="p">,</span>
+<a href="#__codelineno-51-6" id="__codelineno-51-6" name="__codelineno-51-6"></a><span class="w">  </span><span class="nt">"is_duplicate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a href="#__codelineno-51-7" id="__codelineno-51-7" name="__codelineno-51-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Job Status Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-52-1" id="__codelineno-52-1" name="__codelineno-52-1"></a><span class="p">{</span>
+<a href="#__codelineno-52-2" id="__codelineno-52-2" name="__codelineno-52-2"></a><span class="w">  </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"550e8400-e29b-41d4-a716-446655440000"</span><span class="p">,</span>
+<a href="#__codelineno-52-3" id="__codelineno-52-3" name="__codelineno-52-3"></a><span class="w">  </span><span class="nt">"correlation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unique-request-id"</span><span class="p">,</span>
+<a href="#__codelineno-52-4" id="__codelineno-52-4" name="__codelineno-52-4"></a><span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"completed"</span><span class="p">,</span>
+<a href="#__codelineno-52-5" id="__codelineno-52-5" name="__codelineno-52-5"></a><span class="w">  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-15T10:30:00Z"</span><span class="p">,</span>
+<a href="#__codelineno-52-6" id="__codelineno-52-6" name="__codelineno-52-6"></a><span class="w">  </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-15T10:35:00Z"</span><span class="p">,</span>
+<a href="#__codelineno-52-7" id="__codelineno-52-7" name="__codelineno-52-7"></a><span class="w">  </span><span class="nt">"started_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-15T10:30:05Z"</span><span class="p">,</span>
+<a href="#__codelineno-52-8" id="__codelineno-52-8" name="__codelineno-52-8"></a><span class="w">  </span><span class="nt">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-15T10:35:00Z"</span><span class="p">,</span>
+<a href="#__codelineno-52-9" id="__codelineno-52-9" name="__codelineno-52-9"></a><span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-52-10" id="__codelineno-52-10" name="__codelineno-52-10"></a><span class="w">    </span><span class="nt">"markdown_preview"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span>
+<a href="#__codelineno-52-11" id="__codelineno-52-11" name="__codelineno-52-11"></a><span class="w">    </span><span class="nt">"scoring"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">},</span>
+<a href="#__codelineno-52-12" id="__codelineno-52-12" name="__codelineno-52-12"></a><span class="w">    </span><span class="nt">"articles_fetched"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<a href="#__codelineno-52-13" id="__codelineno-52-13" name="__codelineno-52-13"></a><span class="w">    </span><span class="nt">"candidates_generated"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<a href="#__codelineno-52-14" id="__codelineno-52-14" name="__codelineno-52-14"></a><span class="w">  </span><span class="p">},</span>
+<a href="#__codelineno-52-15" id="__codelineno-52-15" name="__codelineno-52-15"></a><span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<a href="#__codelineno-52-16" id="__codelineno-52-16" name="__codelineno-52-16"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="markdown-preview">Markdown Preview</h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/jobs/{job_id}/preview</code></td>
+<td>Get markdown preview for completed job</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-53-1" id="__codelineno-53-1" name="__codelineno-53-1"></a><span class="p">{</span>
+<a href="#__codelineno-53-2" id="__codelineno-53-2" name="__codelineno-53-2"></a><span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-53-3" id="__codelineno-53-3" name="__codelineno-53-3"></a><span class="w">  </span><span class="nt">"preview"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-53-4" id="__codelineno-53-4" name="__codelineno-53-4"></a><span class="w">    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AI Trends in 2024"</span><span class="p">,</span>
+<a href="#__codelineno-53-5" id="__codelineno-53-5" name="__codelineno-53-5"></a><span class="w">    </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"# AI Trends in 2024\n\n..."</span><span class="p">,</span>
+<a href="#__codelineno-53-6" id="__codelineno-53-6" name="__codelineno-53-6"></a><span class="w">    </span><span class="nt">"word_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span>
+<a href="#__codelineno-53-7" id="__codelineno-53-7" name="__codelineno-53-7"></a><span class="w">    </span><span class="nt">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AI software engineering"</span><span class="p">,</span>
+<a href="#__codelineno-53-8" id="__codelineno-53-8" name="__codelineno-53-8"></a><span class="w">    </span><span class="nt">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://example.com/article1"</span><span class="p">]</span>
+<a href="#__codelineno-53-9" id="__codelineno-53-9" name="__codelineno-53-9"></a><span class="w">  </span><span class="p">},</span>
+<a href="#__codelineno-53-10" id="__codelineno-53-10" name="__codelineno-53-10"></a><span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Preview available"</span>
+<a href="#__codelineno-53-11" id="__codelineno-53-11" name="__codelineno-53-11"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="approval-workflow">Approval Workflow</h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/posts/{post_id}/approve</code></td>
+<td>Approve a blog post</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/posts/{post_id}/reject</code></td>
+<td>Reject a blog post</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/posts/{post_id}/revision</code></td>
+<td>Request revision</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/posts/{post_id}/feedback</code></td>
+<td>Get post feedback history</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Approve Request:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-54-1" id="__codelineno-54-1" name="__codelineno-54-1"></a><span class="p">{</span>
+<a href="#__codelineno-54-2" id="__codelineno-54-2" name="__codelineno-54-2"></a><span class="w">  </span><span class="nt">"feedback"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Excellent content!"</span><span class="p">,</span>
+<a href="#__codelineno-54-3" id="__codelineno-54-3" name="__codelineno-54-3"></a><span class="w">  </span><span class="nt">"ratings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-54-4" id="__codelineno-54-4" name="__codelineno-54-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"quality"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"comment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Great writing"</span><span class="p">}</span>
+<a href="#__codelineno-54-5" id="__codelineno-54-5" name="__codelineno-54-5"></a><span class="w">  </span><span class="p">],</span>
+<a href="#__codelineno-54-6" id="__codelineno-54-6" name="__codelineno-54-6"></a><span class="w">  </span><span class="nt">"actor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reviewer-1"</span>
+<a href="#__codelineno-54-7" id="__codelineno-54-7" name="__codelineno-54-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Reject Request:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-55-1" id="__codelineno-55-1" name="__codelineno-55-1"></a><span class="p">{</span>
+<a href="#__codelineno-55-2" id="__codelineno-55-2" name="__codelineno-55-2"></a><span class="w">  </span><span class="nt">"feedback"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Needs more research"</span><span class="p">,</span>
+<a href="#__codelineno-55-3" id="__codelineno-55-3" name="__codelineno-55-3"></a><span class="w">  </span><span class="nt">"categories"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"accuracy"</span><span class="p">,</span><span class="w"> </span><span class="s2">"sources"</span><span class="p">],</span>
+<a href="#__codelineno-55-4" id="__codelineno-55-4" name="__codelineno-55-4"></a><span class="w">  </span><span class="nt">"ratings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-55-5" id="__codelineno-55-5" name="__codelineno-55-5"></a><span class="w">    </span><span class="p">{</span><span class="nt">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accuracy"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}</span>
+<a href="#__codelineno-55-6" id="__codelineno-55-6" name="__codelineno-55-6"></a><span class="w">  </span><span class="p">],</span>
+<a href="#__codelineno-55-7" id="__codelineno-55-7" name="__codelineno-55-7"></a><span class="w">  </span><span class="nt">"actor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reviewer-1"</span>
+<a href="#__codelineno-55-8" id="__codelineno-55-8" name="__codelineno-55-8"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Feedback Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-56-1" id="__codelineno-56-1" name="__codelineno-56-1"></a><span class="p">{</span>
+<a href="#__codelineno-56-2" id="__codelineno-56-2" name="__codelineno-56-2"></a><span class="w">  </span><span class="nt">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a href="#__codelineno-56-3" id="__codelineno-56-3" name="__codelineno-56-3"></a><span class="w">  </span><span class="nt">"post_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"post-123"</span><span class="p">,</span>
+<a href="#__codelineno-56-4" id="__codelineno-56-4" name="__codelineno-56-4"></a><span class="w">  </span><span class="nt">"new_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"approved"</span><span class="p">,</span>
+<a href="#__codelineno-56-5" id="__codelineno-56-5" name="__codelineno-56-5"></a><span class="w">  </span><span class="nt">"feedback_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feedback-456"</span><span class="p">,</span>
+<a href="#__codelineno-56-6" id="__codelineno-56-6" name="__codelineno-56-6"></a><span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Post approved successfully"</span>
+<a href="#__codelineno-56-7" id="__codelineno-56-7" name="__codelineno-56-7"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="feedback-statistics">Feedback Statistics</h4>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/feedback/stats</code></td>
+<td>Get aggregated feedback statistics</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/feedback/learning</code></td>
+<td>Get learning data for ML training</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Stats Response:</strong></p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-57-1" id="__codelineno-57-1" name="__codelineno-57-1"></a><span class="p">{</span>
+<a href="#__codelineno-57-2" id="__codelineno-57-2" name="__codelineno-57-2"></a><span class="w">  </span><span class="nt">"total_feedback"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<a href="#__codelineno-57-3" id="__codelineno-57-3" name="__codelineno-57-3"></a><span class="w">  </span><span class="nt">"approvals"</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
+<a href="#__codelineno-57-4" id="__codelineno-57-4" name="__codelineno-57-4"></a><span class="w">  </span><span class="nt">"rejections"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<a href="#__codelineno-57-5" id="__codelineno-57-5" name="__codelineno-57-5"></a><span class="w">  </span><span class="nt">"revisions"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<a href="#__codelineno-57-6" id="__codelineno-57-6" name="__codelineno-57-6"></a><span class="w">  </span><span class="nt">"approval_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">70.0</span><span class="p">,</span>
+<a href="#__codelineno-57-7" id="__codelineno-57-7" name="__codelineno-57-7"></a><span class="w">  </span><span class="nt">"feedback_by_topic"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-57-8" id="__codelineno-57-8" name="__codelineno-57-8"></a><span class="w">    </span><span class="nt">"AI software engineering"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-57-9" id="__codelineno-57-9" name="__codelineno-57-9"></a><span class="w">      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<a href="#__codelineno-57-10" id="__codelineno-57-10" name="__codelineno-57-10"></a><span class="w">      </span><span class="nt">"approved"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<a href="#__codelineno-57-11" id="__codelineno-57-11" name="__codelineno-57-11"></a><span class="w">      </span><span class="nt">"approval_rate"</span><span class="p">:</span><span class="w"> </span><span class="mf">83.33</span>
+<a href="#__codelineno-57-12" id="__codelineno-57-12" name="__codelineno-57-12"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-57-13" id="__codelineno-57-13" name="__codelineno-57-13"></a><span class="w">  </span><span class="p">}</span>
+<a href="#__codelineno-57-14" id="__codelineno-57-14" name="__codelineno-57-14"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="error-handling">Error Handling</h3>
+<p>All endpoints return appropriate HTTP status codes:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>Success</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Created (for POST /api/jobs)</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content (for DELETE)</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request (validation errors)</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found (resource doesn't exist)</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+</tr>
+</tbody>
+</table>
+<p>Error responses include a <code>detail</code> field:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-58-1" id="__codelineno-58-1" name="__codelineno-58-1"></a><span class="p">{</span>
+<a href="#__codelineno-58-2" id="__codelineno-58-2" name="__codelineno-58-2"></a><span class="w">  </span><span class="nt">"detail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job abc123 not found"</span>
+<a href="#__codelineno-58-3" id="__codelineno-58-3" name="__codelineno-58-3"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="cors-configuration">CORS Configuration</h3>
+<p>By default, CORS is enabled for all origins. Customize in production:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-59-1" id="__codelineno-59-1" name="__codelineno-59-1"></a><span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">cors_origins</span><span class="o">=</span><span class="p">[</span><span class="s2">"https://myapp.example.com"</span><span class="p">])</span>
+</code></pre></div>
+<h3 id="running-the-server">Running the Server</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-60-1" id="__codelineno-60-1" name="__codelineno-60-1"></a><span class="c1"># Development</span>
+<a href="#__codelineno-60-2" id="__codelineno-60-2" name="__codelineno-60-2"></a>uvicorn<span class="w"> </span>ai_blogger.frontend_api:create_app<span class="w"> </span>--factory<span class="w"> </span>--reload
+<a href="#__codelineno-60-3" id="__codelineno-60-3" name="__codelineno-60-3"></a>
+<a href="#__codelineno-60-4" id="__codelineno-60-4" name="__codelineno-60-4"></a><span class="c1"># Production</span>
+<a href="#__codelineno-60-5" id="__codelineno-60-5" name="__codelineno-60-5"></a>uvicorn<span class="w"> </span>ai_blogger.frontend_api:create_app<span class="w"> </span>--factory<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<p>Or with the module directly:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-61-1" id="__codelineno-61-1" name="__codelineno-61-1"></a>python<span class="w"> </span>-m<span class="w"> </span>ai_blogger.frontend_api
+</code></pre></div>
+<h3 id="interactive-documentation">Interactive Documentation</h3>
+<p>When running, access:</p>
+<ul>
+<li>Swagger UI: <code>http://localhost:8000/docs</code></li>
+<li>ReDoc: <code>http://localhost:8000/redoc</code></li>
+</ul>
+<hr/>
+<h2 id="frontend-ui">Frontend UI</h2>
+<p>The AI Blogger includes a React-based frontend UI for job management and approval workflows.</p>
+<h3 id="building-the-frontend">Building the Frontend</h3>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-62-1" id="__codelineno-62-1" name="__codelineno-62-1"></a><span class="nb">cd</span><span class="w"> </span>frontend
+<a href="#__codelineno-62-2" id="__codelineno-62-2" name="__codelineno-62-2"></a>npm<span class="w"> </span>install
+<a href="#__codelineno-62-3" id="__codelineno-62-3" name="__codelineno-62-3"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+</code></pre></div>
+<h3 id="running-with-frontend">Running with Frontend</h3>
+<p>After building, the frontend is automatically served by the Python backend:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-63-1" id="__codelineno-63-1" name="__codelineno-63-1"></a><span class="c1"># The create_app function will detect and serve frontend/dist</span>
+<a href="#__codelineno-63-2" id="__codelineno-63-2" name="__codelineno-63-2"></a>uvicorn<span class="w"> </span>ai_blogger.frontend_api:create_app<span class="w"> </span>--factory<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<p>Access the UI at <code>http://localhost:8000/</code>.</p>
+<h3 id="frontend-features">Frontend Features</h3>
+<p>The frontend provides:</p>
+<ol>
+<li><strong>Job Submission Form</strong>: Create new blog post generation jobs with:</li>
+<li>Topic selection (default topics + custom topics)</li>
+<li>Source selection (Hacker News, Web Search, YouTube)</li>
+<li>Number of candidates slider (1-10)</li>
+<li>
+<p>Correlation ID for idempotency</p>
+</li>
+<li>
+<p><strong>Job List View</strong>: Monitor all jobs with:</p>
+</li>
+<li>Real-time status updates (polling every 5 seconds)</li>
+<li>Color-coded status badges</li>
+<li>Progress bars for in-progress jobs</li>
+<li>
+<p>Quick job selection</p>
+</li>
+<li>
+<p><strong>Post Review Panel</strong>: Review and approve completed jobs with:</p>
+</li>
+<li>Full markdown preview</li>
+<li>Scoring breakdown visualization</li>
+<li>Approve/Reject/Request Revision buttons</li>
+<li>Feedback categories and comments</li>
+<li>Job execution controls</li>
+</ol>
+<h3 id="development-mode">Development Mode</h3>
+<p>For frontend development with hot reload:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-64-1" id="__codelineno-64-1" name="__codelineno-64-1"></a><span class="c1"># Terminal 1: Run the Python backend</span>
+<a href="#__codelineno-64-2" id="__codelineno-64-2" name="__codelineno-64-2"></a>uvicorn<span class="w"> </span>ai_blogger.frontend_api:create_app<span class="w"> </span>--factory<span class="w"> </span>--reload<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+<a href="#__codelineno-64-3" id="__codelineno-64-3" name="__codelineno-64-3"></a>
+<a href="#__codelineno-64-4" id="__codelineno-64-4" name="__codelineno-64-4"></a><span class="c1"># Terminal 2: Run Vite dev server</span>
+<a href="#__codelineno-64-5" id="__codelineno-64-5" name="__codelineno-64-5"></a><span class="nb">cd</span><span class="w"> </span>frontend
+<a href="#__codelineno-64-6" id="__codelineno-64-6" name="__codelineno-64-6"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</code></pre></div>
+<p>The Vite dev server proxies API requests to the backend.</p>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="../architecture/">Architecture</a> - System design overview</li>
+<li><a href="../developer-guide/">Developer Guide</a> - Extension guide</li>
+<li><a href="../operations/">Operations</a> - Deployment guide</li>
+<li><a href="../persistence/">Persistence</a> - Storage layer documentation</li>
+</ul>
+</article>
+</div>
+<script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://github.com/ianlintner/inker" rel="noopener" target="_blank" title="github.com">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+</body>
+</html>
