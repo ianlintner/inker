@@ -17,8 +17,9 @@ data:
       "http://127.0.0.1:8080"
     ]
     
-    # Email domain restrictions (optional)
-    email_domains = ["*"]
+    # Email restriction (allow only specific addresses)
+    email_domains = []
+    authenticated_emails_file = "/etc/oauth2-proxy/allowed_emails.txt"
     
     # Cookie settings
     cookie_name = "_oauth2_proxy_inker"
@@ -51,3 +52,6 @@ data:
     
     # Whitelist domains for redirects
     whitelist_domains = [".cat-herding.net"]
+
+  allowed_emails.txt: |
+    lintner.ian@gmail.com
