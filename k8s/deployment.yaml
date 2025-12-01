@@ -121,8 +121,13 @@ spec:
         - name: OPENAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: inker-secrets
-              key: OPENAI_API_KEY
+              name: azure-cluster-openai-secret
+              key: AZURE_CLUSTER_OPENAI_KEY
+        - name: AZURE_CLUSTER_OPENAI_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-cluster-openai-secret
+              key: AZURE_CLUSTER_OPENAI_KEY
         - name: TAVILY_API_KEY
           valueFrom:
             secretKeyRef:
