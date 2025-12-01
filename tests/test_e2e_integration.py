@@ -33,6 +33,40 @@ from ai_blogger.utils import generate_filename
 pytestmark = pytest.mark.integration
 
 
+# Fixtures
+@pytest.fixture
+def temp_output_dir():
+    """Create a temporary directory for output files."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield Path(tmpdir)
+
+
+@pytest.fixture
+def setup_api_keys(monkeypatch):
+    """Ensure all necessary API keys are set."""
+    ensure_api_key(monkeypatch, "TAVILY_API_KEY", "TAVILY_KEY")
+    ensure_api_key(monkeypatch, "OPENAI_API_KEY")
+    ensure_api_key(monkeypatch, "YOUTUBE_API_KEY")
+
+
+@pytest.fixture
+def temp_db_path():
+    """Create a temporary database file."""
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
+        db_path = f.name
+    yield db_path
+    # Cleanup
+    if os.path.exists(db_path):
+        os.unlink(db_path)
+
+
+@pytest.fixture
+def temp_job_dir():
+    """Create temporary directory for job storage."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield tmpdir
+
+
 # Utility functions
 def get_tavily_api_key() -> Optional[str]:
     """Get the Tavily API key from environment variables."""
