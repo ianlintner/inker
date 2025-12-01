@@ -96,6 +96,9 @@ spec:
           - name: oauth2-proxy-config
             mountPath: /etc/oauth2-proxy
             readOnly: true
+          - name: secrets-store
+            mountPath: /mnt/secrets-store
+            readOnly: true
       
       # Application container
       - name: inker
@@ -163,6 +166,10 @@ spec:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 10
+        volumeMounts:
+          - name: secrets-store
+            mountPath: /mnt/secrets-store
+            readOnly: true
       # CSI volume for Azure Key Vault Secrets Provider
       volumes:
         - name: oauth2-proxy-config
