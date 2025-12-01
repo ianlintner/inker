@@ -16,10 +16,10 @@ from ai_blogger.metrics import (
     record_queue_enqueue,
     record_queue_fail,
     set_system_info,
+    traced,
     track_api_request,
     track_job_execution,
     track_storage_operation,
-    traced,
     update_queue_size,
 )
 
@@ -327,10 +327,10 @@ class TestMetricsExports:
             record_queue_enqueue,
             record_queue_fail,
             set_system_info,
+            traced,
             track_api_request,
             track_job_execution,
             track_storage_operation,
-            traced,
             update_queue_size,
         )
 

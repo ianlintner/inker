@@ -322,9 +322,7 @@ def track_job_execution(job_id: str, job_type: str = "blog_post") -> Generator[N
 
 
 @contextmanager
-def track_storage_operation(
-    operation: str, entity: str
-) -> Generator[None, None, None]:
+def track_storage_operation(operation: str, entity: str) -> Generator[None, None, None]:
     """Context manager to track storage operation metrics.
 
     Args:

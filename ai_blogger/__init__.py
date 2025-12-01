@@ -39,6 +39,26 @@ from .job_models import (
     ScoringInfo,
 )
 from .job_store import JobStore
+
+# Metrics and Observability
+from .metrics import (
+    OPENTELEMETRY_AVAILABLE,
+    PROMETHEUS_AVAILABLE,
+    get_tracer,
+    record_approval_action,
+    record_job_status_change,
+    record_job_submission,
+    record_queue_complete,
+    record_queue_dequeue,
+    record_queue_enqueue,
+    record_queue_fail,
+    set_system_info,
+    traced,
+    track_api_request,
+    track_job_execution,
+    track_storage_operation,
+    update_queue_size,
+)
 from .models import Article, CandidatePost, PostScore, ScoredPost
 from .persistence import (
     ApprovalStatus,
@@ -66,26 +86,6 @@ from .queue import (
     get_queue_type,
 )
 from .utils import generate_filename, get_date_string, get_timestamp, slugify
-
-# Metrics and Observability
-from .metrics import (
-    OPENTELEMETRY_AVAILABLE,
-    PROMETHEUS_AVAILABLE,
-    get_tracer,
-    record_approval_action,
-    record_job_status_change,
-    record_job_submission,
-    record_queue_complete,
-    record_queue_dequeue,
-    record_queue_enqueue,
-    record_queue_fail,
-    set_system_info,
-    track_api_request,
-    track_job_execution,
-    track_storage_operation,
-    traced,
-    update_queue_size,
-)
 
 # Conditional import for Frontend API (requires fastapi)
 try:
