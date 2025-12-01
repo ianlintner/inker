@@ -39,6 +39,26 @@ from .job_models import (
     ScoringInfo,
 )
 from .job_store import JobStore
+
+# Metrics and Observability
+from .metrics import (
+    OPENTELEMETRY_AVAILABLE,
+    PROMETHEUS_AVAILABLE,
+    get_tracer,
+    record_approval_action,
+    record_job_status_change,
+    record_job_submission,
+    record_queue_complete,
+    record_queue_dequeue,
+    record_queue_enqueue,
+    record_queue_fail,
+    set_system_info,
+    traced,
+    track_api_request,
+    track_job_execution,
+    track_storage_operation,
+    update_queue_size,
+)
 from .models import Article, CandidatePost, PostScore, ScoredPost
 from .persistence import (
     ApprovalStatus,
@@ -164,4 +184,21 @@ __all__ = [
     "get_date_string",
     "get_timestamp",
     "slugify",
+    # Metrics and Observability
+    "PROMETHEUS_AVAILABLE",
+    "OPENTELEMETRY_AVAILABLE",
+    "get_tracer",
+    "traced",
+    "track_job_execution",
+    "track_storage_operation",
+    "track_api_request",
+    "record_job_submission",
+    "record_job_status_change",
+    "record_approval_action",
+    "record_queue_enqueue",
+    "record_queue_dequeue",
+    "record_queue_complete",
+    "record_queue_fail",
+    "update_queue_size",
+    "set_system_info",
 ]

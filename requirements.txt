@@ -6,3 +6,4 @@ requests>=2.31.0
 python-slugify>=8.0.0
 tavily-python>=0.3.0
 google-api-python-client>=2.100.0
+prometheus-client>=0.17.0

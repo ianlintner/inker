@@ -5,6 +5,7 @@ This module provides RESTful API endpoints for frontend clients to:
 - View job status and results
 - Preview blog post markdown
 - Approve/reject workflow hooks
+- Prometheus metrics endpoint (/metrics)
 
 Designed for extensibility and connection with backend services.
 
@@ -23,10 +24,12 @@ Usage:
 """
 
 import logging
+import time
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel, Field
 
 from .feedback_api import FeedbackService
@@ -47,6 +50,11 @@ from .job_models import (
     JobStatusResponse,
     JobSubmitResponse,
     MarkdownPreview,
+)
+from .metrics import (
+    PROMETHEUS_AVAILABLE,
+    set_system_info,
+    track_api_request,
 )
 from .persistence import StorageBackend, create_storage
 
@@ -661,6 +669,9 @@ def create_app(
         redoc_url="/redoc",
     )
 
+    # Set system info for metrics
+    set_system_info(version=version)
+
     # Configure CORS - defaults to permissive for development
     # Production deployments should specify explicit origins
     if cors_origins is None:
@@ -674,6 +685,37 @@ def create_app(
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Add metrics middleware for request tracking
+    @app.middleware("http")
+    async def metrics_middleware(request: Request, call_next):
+        """Middleware to track API request metrics."""
+        start_time = time.time()
+        response = await call_next(request)
+        duration = time.time() - start_time
+
+        # Track metrics for API endpoints (exclude /metrics itself)
+        if request.url.path != "/metrics":
+            track_api_request(
+                method=request.method,
+                endpoint=request.url.path,
+                status_code=response.status_code,
+                duration=duration,
+            )
+
+        return response
+
+    # Add Prometheus metrics endpoint
+    if PROMETHEUS_AVAILABLE:
+        from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+
+        @app.get("/metrics", include_in_schema=False)
+        async def metrics():
+            """Expose Prometheus metrics."""
+            return Response(
+                content=generate_latest(),
+                media_type=CONTENT_TYPE_LATEST,
+            )
 
     # Include the router
     app.include_router(router, prefix="/api")
