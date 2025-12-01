@@ -680,8 +680,8 @@ def create_app(
 
     # Serve frontend static files if enabled
     if serve_frontend:
-        from fastapi.staticfiles import StaticFiles
         from fastapi.responses import FileResponse
+        from fastapi.staticfiles import StaticFiles
 
         # Find the frontend directory
         if frontend_dir is None:
